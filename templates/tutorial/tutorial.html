@@ -1,0 +1,14 @@
+{% extends "tutorial/master.html" %}
+
+
+{% block content %}
+    <h1>Hello World</h1>
+    <p>Compare this snippet from tutorial\views.py:></p>
+
+    {% if check == True %}
+        <h1>True</h1>
+    {% else %}
+        <h1>False</h1>
+    {% endif %}
+
+{% endblock %}

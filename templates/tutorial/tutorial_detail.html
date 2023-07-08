@@ -1,0 +1,12 @@
+{% extends "tutorial/master.html" %}
+
+{% block title %}Tutorial Details{% endblock %}
+{% block content %}
+
+  <h1>{{ tutorial.title}}</h1>
+  <p>Description: {{ tutorial.text}}</p>
+  <p>Date: {{ tutorial.created_date}} </p>
+
+<p>Back to <a href="/tutorial/my_tutorials">Tutorials</a> </p>
+
+{% endblock %}

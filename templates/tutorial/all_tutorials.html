@@ -1,0 +1,11 @@
+ {% extends "tutorial/master.html" %}
+{% include "blood/footer.html" %}
+{% block content %}
+<p><a href="/">HOME</a></p>
+
+    <ul>
+        {% for tutorial in all_tutorials %}
+            <li> <a href="my_tutorials/tutorial_detail/{{ tutorial.id }}">{{ tutorial.title }}</a> </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

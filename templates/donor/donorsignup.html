@@ -1,0 +1,148 @@
+{%load static%}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+      
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.css">
+ 
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+
+    <!-- Main CSS-->
+
+    <link href="{% static "css/main.css" %}"rel="stylesheet" media="all">
+    <style>
+
+    </style>
+  </head>
+  <body>
+    {% include "blood/navbar.html" %}
+
+
+	<section class="h-100 login_bg">
+		<div class="container h-100">
+			<div class="row justify-content-sm-center h-100">
+				<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9 p-t-45 p-b-20">
+					<div class="card shadow-lg my-5">
+						<div class="card-body p-5">
+							<h1 class="fs-4 card-title fw-bold mb-4">Donor Self-Registration</h1>
+							<form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted">Profile Picture</label>
+                                    <div class="input-group">
+                                        {% render_field donorForm.profile_pic|attr:'required:true'  class="form-control"  %}
+                                    </div>
+                                </div>
+								<div class="mb-3">
+									<label class="mb-2 text-muted" for="f_name">First Name</label>
+                                    <div class="input-group" id="f_name">
+                                        {% render_field userForm.first_name|attr:'required:true'  class="form-control" name="name" value="" type="text" id="name"  %}
+                                    </div>
+									<div class="invalid-feedback">
+										Name is required
+									</div>
+								</div>
+                                <div class="mb-3">
+									<label class="mb-2 text-muted" for="l_name">Last Name</label>
+                                    <div class="input-group" id="l_name">
+                                        {% render_field userForm.last_name|attr:'required:true'  class="form-control" name="name" value="" type="text" id="name"  %}
+                                    </div>
+									<div class="invalid-feedback">
+										Name is required
+									</div>
+								</div>
+                                <div class="mb-3">
+									<label class="mb-2 text-muted" for="username">UserName</label>
+                                    <div class="input-group" id="username">
+                                        {% render_field userForm.username|attr:'required:true'  class="form-control" name="username" type="text"  %}
+                                    </div>
+									<div class="invalid-feedback">
+										Name is required
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label class="mb-2 text-muted" for="email">E-Mail Address</label>
+									<input id="email" type="email" class="form-control" name="email" value="" required>
+									<div class="invalid-feedback">
+										Email is invalid
+									</div>
+								</div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted">Mobile Number</label>
+                                    <div class="input-group">
+                                        {% render_field donorForm.mobile|attr:'required:true'  class="form-control" type="number" %}
+                                    </div>
+                                </div>
+
+								<div class="mb-3">
+									<label class="mb-2 text-muted" for="password">Password</label>
+                                    <div class="input-group" id="password">
+                                        {% render_field userForm.password|attr:'required:true'  class="form-control" type="password" name="password"  %}
+                                    </div>
+								    <div class="invalid-feedback">
+								    	Password is required
+							    	</div>
+								</div>
+
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted">Blood Group</label>
+                                    <select class="form-select" name="bloodgroup" aria-label="Default select example">
+                                          <option disabled="disabled" selected>Choose a blood group</option>
+                                            <option value="0+">O+</option>
+                                            <option value="0">O-</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted">Address</label>
+                                    <div class="input-group">
+                                        {% render_field donorForm.address|attr:'required:true'  class="form-control"  %}
+                                    </div>
+                                </div>
+
+
+								<p class="form-text text-muted mb-3">
+									By registering you agree with our <a href="#"> terms and condition.</a>
+								</p>
+
+								<div class="align-items-center d-flex">
+									<button type="submit" class="btn btn-primary ms-auto">
+										Register
+									</button>
+								</div>
+							</form>
+						</div>
+						<div class="card-footer py-3 border-0">
+							<div class="text-center">
+								Already have an account? <a href="/donor/donorlogin" class="text-dark">Login</a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+{% include "blood/footer.html" %}
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </body>
+</html>
