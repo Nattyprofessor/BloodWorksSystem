@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'blood',
     'donor',
     'patient',
-    'tutorial'
+    'tutorial',
+    'appointments',
 ]
 
 MIDDLEWARE = [

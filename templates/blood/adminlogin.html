@@ -22,48 +22,47 @@
 
 
 
+<section class="h-100 login_bg-02">
+		<div class="container h-100 ">
+			<div class="row justify-content-sm-center h-100">
+				<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9 p-t-45 p-b-20">
+					<!--<div class="text-center my-5">
+						<img src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="logo" width="100">
+					</div>-->
+					<div class="card shadow-lg my-5">
+						<div class="card-body p-5">
+							<h1 class="fs-4 card-title fw-bold mb-4">Admin Login</h1>
+							<form method="POST">
+								{% csrf_token %}
+								<div class="mb-3">
+									<div class="form-row">
+									<label class="text-muted" for="email">Username</label>
+									<div class="input-group" id="email">
+                                    {% render_field form.username type="text" id="text" name="text" class="form-control"%}
+                                	</div>
+										</div>
 
-    <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
-        <div class="wrapper wrapper--w790">
-            <br><br><br>
-            <div class="card card-5">
-                <div class="card-heading">
-                    <h2 class="title">Admin Login</h2>
-                </div>
-                <div class="card-body">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <div class="name">Username</div>
-                            <div class="value">
-                                <div class="input-group">
-                                   
-                                    {% render_field form.username class="input--style-5"%}
-                     
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="name">Password</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    
-                                    {% render_field form.password class="input--style-5" %}
-                                </div>
-                            </div>
-                        </div>
+								</div>
 
+								<div class="mb-3">
+									<label class="text-muted" for="password">Password</label>
+									<div class="input-group" id="password">
+                                    	{% render_field form.password class="form-control" name="password" type="password" id="password" %}
+                                	</div>
+								</div>
+								<div class="d-flex align-items-center">
+									<button type="submit" class="btn btn-danger ms-auto">
+										Login
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-                        
-
-                        <div>
-                            <button class="btn btn--radius-2 btn-danger" type="submit">Login</button>
-                        </div>
-                    </form>
-                                    </div>
-            </div>
-        </div>
-    </div>
 
 {% include "blood/footer.html" %}
 <!-- Optional JavaScript -->

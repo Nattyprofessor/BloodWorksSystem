@@ -1,0 +1,68 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{%load static%}
+<head>
+    <style>
+     .label {
+  color: white;
+  padding: 8px;
+}
+
+.success {background-color: #4CAF50;} /* Green */
+.info {background-color: #2196F3;} /* Blue */
+.warning {background-color: #ff9800;} /* Orange */
+.danger {background-color: #f44336;} /* Red */
+.other {background-color: #e7e7e7; color: black;} /* Gray */
+
+       #datepicker{width:180px;}
+      #datepicker > span:hover{cursor: pointer;}
+    </style>
+</head>
+<br><br>
+<div class="container">
+    <H4 class="text-center">Appointment Locations</H4><br>
+    {% if message %}
+    <h5 class="text-center" style="color: red;"> {{message}}</h5><br>
+    {% else %}
+
+    {% endif %}
+    <table class="table table-light table-hover table-bordered table-striped">
+        <thead class="bg-info">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Date</th>
+
+            <th scope="col">Time</th>
+            <th scope="col">Map URL</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone No</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for x in data %}
+        <tr>
+            <td> {{x.title}}</td>
+            <td>{{x.date}}</td>
+            <td>{x.time}}</td>
+            <td>{{x.map}}</td>
+            <td>{{x.email}}</td>
+            <td>{{x.phone}}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+</div>
+
+<div class="container fluid">
+    <div class="row">
+        <h3 class="text-center">Show All Appointments</h3>
+    </div>
+
+</div>
+
+
+{% endblock content %}

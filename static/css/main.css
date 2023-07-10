@@ -305,6 +305,10 @@ h6 {
             background: rgb(111,0,0);
             background: linear-gradient(228deg, rgba(111,0,0,1) 0%, rgba(253,29,29,1) 50%, rgba(255,166,0,1) 100%);
         }
+.login_bg-02{
+    background: rgb(1,66,54);
+    background: linear-gradient(222deg, rgba(1,66,54,1) 0%, rgba(10,201,93,1) 50%, rgba(255,252,2,1) 100%);
+}
 
 /* ==========================================================================
    #SPACING

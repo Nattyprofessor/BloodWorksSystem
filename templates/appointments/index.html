@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Appointment</title>
+</head>
+<body>
+{% include "blood/navbar.html" %}
+<div class="container fluid my-5">
+    <div class="row">
+        <div class=" text-center pt-1"><h1>Available Locations</h1></div>
+
+        <div class="row">
+            {% for appointment in appointments %}
+            <div class="col-md-4 mt-5">
+                <div class="card text-center">
+                    <img class="card-img-top"
+                         src="{{ appointment.image }}"
+                         alt="Card image cap">
+                    <div class="card-body" id="card">
+                        <h5 class="card-title">{{ appointment.title }}</h5>
+                        <p class="card-text">{{ appointment.date }}</p>
+                        <p class="card-text">{{ appointment.time }}</p>
+                        <button class="btn btn-primary" type="button" data-bs-target="#appointmentModal"
+                                data-bs-toggle="modal">Book Appointment</button>
+                        <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">New Appointment for {{
+                                            appointment.title
+                                            }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="mb-3">
+                                                <label for="name" class="col-form-label">Your Name:</label>
+                                                <input type="text" class="form-control" id="name" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="email" class="col-form-label">Your Email:</label>
+                                                <input type="email" class="form-control" id="email" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Request Appointment</button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer text-muted">
+                        <div class="row justify-content-around">
+                            <div class="col-sm-4 col-md-3">
+                                <a class="btn btn-primary" href="{{ appointment.map }}"><i class="fas fa-map"></i>
+                                    Map</a>
+                            </div>
+                            <div class="col-sm-4 col-md-3">
+                                <a class="btn btn-primary" href="mailto:{{ appointment.email }}"><i
+                                        class="fas fa-envelope"></i> Email</a>
+                            </div>
+                            <div class="col-sm-4 col-md-3">
+                                <a class="btn btn-primary" href="tel:{{ appointment.phone }}"><i
+                                        class="fas fa-phone"></i> Phone</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include "blood/footer.html" %}
+</body>
+</html>

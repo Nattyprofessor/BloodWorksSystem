@@ -17,12 +17,15 @@ from django.contrib import admin
 from django.urls import path,include
 from django.contrib.auth.views import LogoutView,LoginView
 from blood import views
+from appointments import  views as a_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('tutorial/', include('tutorial.urls')),
     path('donor/',include('donor.urls')),
     path('patient/',include('patient.urls')),
+
+    path('create_appointment/', a_views.main,name='create_appointment'),
 
     
     path('',views.home_view,name=''),
@@ -37,6 +40,7 @@ urlpatterns = [
     path('update-donor/<int:pk>', views.update_donor_view,name='update-donor'),
     path('delete-donor/<int:pk>', views.delete_donor_view,name='delete-donor'),
     path('admin-request', views.admin_request_view,name='admin-request'),
+    path('admin-appointment', views.admin_show_appointments_view,name='admin-appointment'),
     path('update-patient/<int:pk>', views.update_patient_view,name='update-patient'),
     path('delete-patient/<int:pk>', views.delete_patient_view,name='delete-patient'),
     path('admin-donation', views.admin_donation_view,name='admin-donation'),
