@@ -62,8 +62,43 @@
 
 
 
+
+
+
+
     </style>
 
+    <script type="application/javascript">
+      window.tiledeskSettings=
+      {
+          projectid: "64ae40c0b8d5f00013006715"
+      };
+      (function(d, s, id) {
+          var w=window; var d=document; var i=function(){i.c(arguments);};
+          i.q=[]; i.c=function(args){i.q.push(args);}; w.Tiledesk=i;
+          var js, fjs=d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js=d.createElement(s);
+          js.id=id; js.async=true; js.src="https://widget.tiledesk.com/v6/launch.js";
+          fjs.parentNode.insertBefore(js, fjs);
+      }(document,'script','tiledesk-jssdk'));
+
+
+
+
+    </script>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
 </head>
 
 
@@ -76,7 +111,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hero-text">
                 <h2 class="hero_title">Blood Works and Volunteering</h2>
-                <p class="hero_desc"><a href="#about" class="text-white"> Join us Today. <i
+                <p class="btn btn-info hero_desc"><a href="#about" class="text-white"> Join us Today. <i
                         class="fas fa-arrow-down"></i></a></p>
                 <div class="container">
                     <div class="row">
@@ -129,17 +164,24 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 mt-4 pt-2">
                             <div class="card work-desk rounded border-0 shadow-lg overflow-hidden">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN3oonBwYsHf2ZdEI4NUDJej7deUk0chFkCQ&usqp=CAU"
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWLJ2vdCQejpKQ-Ru9eX5ItBtcCuO4RvxoxA&usqp=CAU"
                                      class="img-fluid" alt="Image"/>
                                 <div class="img-overlay bg-dark"></div>
                             </div>
                         </div>
                         <!--end col-->
+                        <div class="col-lg-12 col-md-12 mt-4 pt-2">
+                            <div class="card work-desk rounded border-0 shadow-lg overflow-hidden">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN3oonBwYsHf2ZdEI4NUDJej7deUk0chFkCQ&usqp=CAU"
+                                     class="img-fluid" alt="Image"/>
+                                <div class="img-overlay bg-dark"></div>
+                            </div>
+                        </div>
 
                         <div class="col-12">
                             <div class="mt-4 pt-2 text-right">
-                                <a href="javascript:void(0)" class="btn btn-info">Our Gallery<i
-                                        class="mdi mdi-chevron-right"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-info"><i class="fa fa-image"></i> Our
+                                    Gallery</a>
                             </div>
                         </div>
                     </div>
@@ -175,10 +217,10 @@
         </div>
         <!--end col-->
 
-        <div class="col-lg-6 col-md-6 col-12 order-1 order-md-2">
+        <div class="col-lg-6 col-md-6 col-12 order-1 order-md-2" id="about">
             <div class="section-title ml-lg-5">
-                <h5 class="text-custom font-weight-normal mb-3" id="about"></h5>
-                <h4 class="title mb-4">Blood Works - About Us</h4>
+                <h1 class="text-custom font-weight-normal mb-3">About Us</h1>
+                <h4 class="title mb-4">Who are Blood Works?</h4>
                 <p class="text-muted mb-0">Blood Works is an organization dedicated to improving blood donation and
                     related services. With a strong focus on promoting awareness and facilitating safe and efficient
                     blood collection, Blood Works plays a vital role in ensuring a reliable supply of blood for
@@ -199,7 +241,7 @@
 
                             <i class="fa fa-handshake-o h4 mb-0 text-custom " style="color: #10d17d;"
                                aria-hidden="true"></i>
-                            <h6 class="ml-3 mb-0"><a href="javascript:void(0)" class="text-dark">Become a volunteer</a>
+                            <h6 class="ml-3 mb-0"><a href="/volunteer" class="text-dark">Become a volunteer</a>
                             </h6>
                         </div>
                     </div>
@@ -219,9 +261,8 @@
                     </div>
                     <div class="col-lg-6 mt-4 pt-2">
                         <div class="media align-items-center rounded shadow p-3">
-                            <i class="fa fa-image h4 mb-0 text-custom"></i>
-                            <h6 class="ml-3 mb-0"><a href="javascript:void(0)" class="text-dark">Check out our
-                                sponsors</a></h6>
+                            <i class="fa fa-bullseye h4 mb-0 text-custom"></i>
+                            <h6 class="ml-3 mb-0"><a href="javascript:void(0)" class="text-dark">Need any blood assistance?</a></h6>
                         </div>
                     </div>
                 </div>
@@ -246,7 +287,16 @@
                 <li class="list-group-item">You must be at least 16 years old in most states</li>
                 <li class="list-group-item">You must weigh at least 110 lbs</li>
             </ul>
-            <p>If you have any questions <a class="btn btn-secondary" href="#" role="button">Inquire &raquo;</a></p>
+            <br>
+            <div class="alert alert-primary d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
+                    <use xlink:href="#info-fill"/>
+                </svg>
+                <div>
+                    If you have any questions click on the chatbot on the bottom right.
+                </div>
+            </div>
+
         </div>
         <div class="col-md-6">
             <h2>The Process</h2>
@@ -341,8 +391,45 @@
              <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
          </div>-->
     </div>
+</div>
 
+<hr>
+<div class="container-fluid" id="support">
+    <!-- Example row of columns -->
+    <h1 class="text-center"> - Support Us -</h1>
+    <div class="card-group row row-cols-1 row-cols-md-4 g-4 justify-content-md-center">
+        <div class="col-sm-4">
+            <div class="card h-100">
+                <img src="https://template79832.motopreview.com/mt-demo/79800/79832/mt-content/uploads/2019/04/mt-1802-support-img01.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Donate Funds</h5>
+                    <p class="card-text">Your financial gift can help a thousand children who struggle from illnesses. Your gift can provide the necessary medicine, treatment, and other essentials.</p>
+                    <a href="#" class="btn btn-primary">More Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card h-100">
+                <img src="https://kwaabafoundation.org/wp-content/uploads/2020/06/P32A0172.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Become a Volunteer</h5>
+                    <p class="card-text">Volunteers are playing a vital role in helping our center save lives. We are always looking for your help. Join our team today</p>
+                    <a href="/volunteer" class="btn btn-primary">More Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card h-100">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4vIJJIuGtUBHZiUUmEkzUQNK9QZlmdUYkRg&usqp=CAU" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Host a Blood Drive</h5>
+                    <p class="card-text">Inspiring others to give blood by hosting a blood drive is a rewarding way to benefit your community.</p>
+                    <a href="#" class="btn btn-primary">More Details</a>
+                </div>
+            </div>
+        </div>
 
+    </div>
 </div>
 {% include "blood/footer.html" %}
 

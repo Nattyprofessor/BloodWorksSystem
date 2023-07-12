@@ -26,6 +26,8 @@ urlpatterns = [
     path('patient/',include('patient.urls')),
 
     path('create_appointment/', a_views.main,name='create_appointment'),
+    path('blood_drives/', a_views.show_drives,name='blood_drives'),
+    path('volunteer/', a_views.volunteer,name='volunteer'),
 
     
     path('',views.home_view,name=''),

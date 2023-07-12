@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Appointment, Requests
+from .models import *
 
 
 class AppointmentForm(forms.ModelForm):
@@ -13,3 +13,9 @@ class RequestForm(forms.ModelForm):
     class Meta:
         model = Requests
         fields = ['name', 'email', 'phone', 'location']
+
+
+class VolunteerRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = VolunteerRegistration
+        fields = [ 'name', 'email', 'phone', 'location', 'reason']

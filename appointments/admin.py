@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Appointment, Requests
+from .models import *
 # Register your models here.
 admin.site.register(Appointment)
 admin.site.register(Requests)
+admin.site.register(VolunteerRegistration)

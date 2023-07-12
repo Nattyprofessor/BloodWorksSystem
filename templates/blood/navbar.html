@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 
 <html lang="en">
@@ -5,6 +6,7 @@
 <head>
     <meta charset="utf-8">
 
+    <link rel="icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.css">-->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -33,6 +35,7 @@
 
     }
 
+
     </style>
 </head>
 
@@ -40,25 +43,42 @@
 <!-- navbar -->
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark navbarScroll">
     <div class="container">
-        <a class="navbar-brand" href="/">Blood Works System</a>
+        <a class="navbar-brand" href="/">
+      <img src="{% static 'image/logo.png' %}" alt="" width="25" height="30" class="d-inline-block align-text-top">
+      Blood Works
+    </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/"><i class="fas fa-home"></i>&nbsp; Home</i></a>
-                </li>
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a class="nav-link" href="/patient/patientlogin"><i class="fas fa-procedures"></i>&nbsp; Patient</i>
                     </a>
+                </li>-->
+                <li class="nav-item">
+                    <a class="nav-link" href="#about"><i class="fas fa-info-circle"></i>&nbsp;About Us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/donor/donorlogin"><i class="fas fa-user"></i>&nbsp; Donor</i></a>
+                    <a class="nav-link" href="#support">Support Us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/adminlogin"><i class="fas fa-user-shield"></i>&nbsp; Admin</i></a>
+                    <a class="nav-link" href="/blood_drives"><i class="fas fa-bullhorn"></i>&nbsp; Blood Drives</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-key"></i>&nbsp;Login
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/donor/donorlogin"><i class="fas fa-user"></i> Login as Donor</a></li>
+                        <li><a class="dropdown-item" href="/volunteer/volunteerlogin"><i class="fas fa-user"></i> Login as Volunteer</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/adminlogin"><i class="fas fa-user-shield"></i> Login as Admin</a></li>
+                    </ul>
                 </li>
             </ul>
 

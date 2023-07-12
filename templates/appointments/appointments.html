@@ -98,8 +98,8 @@
         <div class="row">
             {% for appointment in appointments %}
             <div class="col-md-4 mt-5">
-                <div class="card text-center">
-                    <img class="card-img-top"
+                <div class="card text-center h-100">
+                    <img class="card-img-top" height="200"
                          src="{{ appointment.image }}"
                          alt="Card image cap">
                     <div class="card-body" id="card">
@@ -116,7 +116,7 @@
                     <div class="card-footer text-muted">
                         <div class="row justify-content-around">
                             <div class="col-sm-4 col-md-3">
-                                <a class="btn btn-primary" href="{{ appointment.map }}"><i class="fas fa-map"></i>
+                                <a class="btn btn-primary" href="{{ appointment.map }}" target=”_blank”><i class="fas fa-map"></i>
                                     Map</a>
                             </div>
                             <div class="col-sm-4 col-md-3">
