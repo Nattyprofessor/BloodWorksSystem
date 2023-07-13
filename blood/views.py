@@ -267,3 +267,14 @@ def reject_donation_view(request, pk):
     donation.status = 'Rejected'
     donation.save()
     return HttpResponseRedirect('/admin-donation')
+
+@login_required(login_url='adminlogin')
+def admin_volunteers_view(request):
+    volunteers = amodels.VolunteerRegistration.objects.all()
+    return render(request, 'blood/admin_volunteers.html', {'volunteers': volunteers})
+
+@login_required(login_url='adminlogin')
+def admin_blood_drives_view(request):
+    blood_drives = models.BloodDrives.objects.all()
+    hosted_drives = amodels.HostedBloodDrives.objects.all()
+    return render(request, 'blood/admin_blood_drives.html', {'blood_drives': blood_drives, 'hosted_drives': hosted_drives})

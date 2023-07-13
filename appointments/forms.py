@@ -18,4 +18,10 @@ class RequestForm(forms.ModelForm):
 class VolunteerRegistrationForm(forms.ModelForm):
     class Meta:
         model = VolunteerRegistration
-        fields = [ 'name', 'email', 'phone', 'location', 'reason']
+        fields = ['name', 'email', 'phone', 'location', 'reason']
+
+
+class HostedBloodDrivesForm(forms.ModelForm):
+    class Meta:
+        model = HostedBloodDrives
+        fields = ['name', 'organization', 'attendees', 'phone', 'email', 'address', 'county', 'date', 'plan_doc']

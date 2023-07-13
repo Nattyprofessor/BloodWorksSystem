@@ -1,0 +1,124 @@
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Host a Blood Drive</title>
+    <style>
+    body{
+        color: #000;
+        overflow-x: hidden;
+        height: 100%;
+        background-image: url("https://i.imgur.com/GMmCQHC.png");
+        background-repeat: no-repeat;
+        background-size: 100% 100%}.card{padding: 30px 40px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+        border: none !important;
+        box-shadow: 0 6px 12px 0 rgba(0,0,0,0.2)
+        }
+        .blue-text{
+        color: #00BCD4
+        }
+        .form-control-label{
+        margin-bottom: 0
+        }
+        input, textarea, button{
+        padding: 8px 15px;
+        border-radius: 5px !important;
+        margin: 5px 0px;box-sizing: border-box;
+        border: 1px solid #ccc;
+        font-size: 18px !important;
+        font-weight: 300
+        }
+        input:focus, textarea:focus{
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        border: 1px solid #00BCD4;
+        outline-width: 0;
+        font-weight: 400
+        }
+        .btn-block{
+        text-transform: uppercase;
+        font-size: 15px !important;
+        font-weight: 400;
+        height: 43px;
+        cursor: pointer
+        }
+        .btn-block:hover{
+        color: #fff !important
+        }
+        button:focus{
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;outline-width: 0
+        }
+
+        .carousel-item {
+  height: 65vh;
+  min-height: 350px;
+  background: no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+
+    </style>
+</head>
+<body>
+{% include "blood/navbar.html" %}
+
+<div class="container-fluid px-1 py-5 mx-auto">
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+            <h1 class="bg-danger text-white px-3 py-2">Host a Blood Drive</h1>
+            {% include "appointments/message.html" %}
+            <div class="card">
+                <form class="form-card" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Full name<span class="text-danger"> *</span></label> {% render_field form.name|attr:'required:true' type='text' class="form-control" placeholder="Enter your full name" %}
+                        </div>
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Email<span class="text-danger"> *</span></label> {% render_field form.email|attr:'required:true' type='email' class="form-control" placeholder="Enter your email" onblur="validate(1)" %}
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Phone Number (add country code)<span class="text-danger"> *</span></label> {% render_field form.phone|attr:'required:true' type='text' class="form-control" placeholder="Enter your phone number" value="+254" onblur="validate(1)" %}
+                        </div>
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Address to hosted drive<span class="text-danger"> *</span></label> {% render_field form.address|attr:'required:true' type='text' class="form-control" placeholder="Address" %}
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Location (County of residence)<span class="text-danger"> *</span></label> {% render_field form.county|attr:'required:true' class="form-control" placeholder="Enter your location" %}
+                        </div>
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Planned Date<span class="text-danger"> *</span></label> {% render_field form.date|attr:'required:true' class="form-control" type="date" %}
+                        </div>
+
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Enter your organization</label> {% render_field form.organization|attr:'required:true' class="form-control" %}</div>
+
+                        <div class="form-group col-sm-6 flex-column d-flex"><label class="form-control-label px-3">Enter the number of attendees</label> {% render_field form.attendees|attr:'required:true' class="form-control" %}</div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-12 flex-column d-flex"><label class="form-control-label px-3">Upload your proposed plan document</label> {% render_field form.plan_doc|attr:'required:true' class="form-control" %}
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="form-group col-sm-6 mt-2">
+                            <button type="submit" class="btn-block btn-primary">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "blood/footer.html" %}
+
+</body>
+</html>

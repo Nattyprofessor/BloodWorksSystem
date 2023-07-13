@@ -1,0 +1,40 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{%load static%}
+<br><br>
+<div class="container">
+    <H4 class="text-center">ALL VOLUNTEERS</H4><br>
+    <table class="table table-light table-hover table-bordered table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Location</th>
+                <th scope="col">Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in volunteers %}
+            <tr>
+                <td> {{t.name}}</td>
+                <td>{{t.email}}</td>
+                <td>{{t.phone}}</td>
+                <td>{{t.location}}</td>
+                <td>{{t.reason}}</td>
+                
+                <!--<td class="text-right"> Might be useful later
+                    <button class="btn btn-primary badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'update-patient' t.id  %}">EDIT</a> </button>
+                    <button class="btn btn-danger badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'delete-patient' t.id  %}">DELETE</a> </button>
+                </td>-->
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    
+    </table>
+</div>
+
+
+{% endblock content %}

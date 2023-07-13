@@ -1,0 +1,78 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{%load static%}
+<br><br>
+<div class="container">
+    <H4 class="text-center">ALL BLOOD DRIVES</H4><br>
+    <table class="table table-light table-hover table-bordered table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">County</th>
+                <th scope="col">Location Code</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in blood_drives %}
+            <tr>
+                <td> {{t.name}}</td>
+                <td>{{t.address}}</td>
+                <td>{{t.county}}</td>
+                <td>{{t.location_code}}</td>
+                <td>{{t.date}}</td>
+                
+                <!--<td class="text-right"> Might be useful later
+                    <button class="btn btn-primary badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'update-patient' t.id  %}">EDIT</a> </button>
+                    <button class="btn btn-danger badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'delete-patient' t.id  %}">DELETE</a> </button>
+                </td>-->
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    
+    </table>
+</div>
+<div class="container">
+    <h4 class="text-center">ALL HOSTED BLOOD DRIVES</h4><br>
+    <table class="table table-light table-hover table-bordered table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">Requester Name</th>
+                <th scope="col">Organization</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Address</th>
+                <th scope="col">County</th>
+                <th scope="col">Attendees</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in hosted_drives %}
+            <tr>
+                <td> {{t.name}}</td>
+                <td>{{t.organization}}</td>
+                <td>{{t.phone}}</td>
+                <td>{{t.email}}</td>
+                <td>{{t.address}}</td>
+                <td>{{t.county}}</td>
+                <td>{{t.attendees}}</td>
+                <td>{{t.date}}</td>
+
+                <!--<td class="text-right"> Might be useful later
+                    <button class="btn btn-primary badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'update-patient' t.id  %}">EDIT</a> </button>
+                    <button class="btn btn-danger badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'delete-patient' t.id  %}">DELETE</a> </button>
+                </td>-->
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+</div>
+
+
+{% endblock content %}

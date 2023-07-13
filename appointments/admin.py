@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(Appointment)
 admin.site.register(Requests)
 admin.site.register(VolunteerRegistration)
+admin.site.register(HostedBloodDrives)
