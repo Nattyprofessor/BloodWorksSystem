@@ -13,6 +13,7 @@
                 <th scope="col">County</th>
                 <th scope="col">Location Code</th>
                 <th scope="col">Date</th>
+                <th scope="col">No of Volunteers</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,7 @@
                 <td>{{t.county}}</td>
                 <td>{{t.location_code}}</td>
                 <td>{{t.date}}</td>
+                <td>{{t.no_of_volunteers}}</td>
                 
                 <!--<td class="text-right"> Might be useful later
                     <button class="btn btn-primary badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'update-patient' t.id  %}">EDIT</a> </button>

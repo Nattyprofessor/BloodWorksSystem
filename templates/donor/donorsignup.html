@@ -66,8 +66,8 @@
 								</div>
 
 								<div class="mb-3">
-									<label class="mb-2 text-muted" for="email">E-Mail Address</label>
-									<input id="email" type="email" class="form-control" name="email" value="" required>
+									<label class="mb-2 text-muted">E-Mail Address</label>
+                                        {% render_field donorForm.email|attr:'required:true'  class="form-control" name="email" placeholder="E-mail" type="email"  %}
 									<div class="invalid-feedback">
 										Email is invalid
 									</div>
@@ -93,8 +93,8 @@
                                     <label class="mb-2 text-muted">Blood Group</label>
                                     <select class="form-select" name="bloodgroup" aria-label="Default select example">
                                           <option disabled="disabled" selected>Choose a blood group</option>
-                                            <option value="0+">O+</option>
-                                            <option value="0">O-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
                                             <option value="A+">A+</option>
                                             <option value="A-">A-</option>
                                             <option value="B+">B+</option>

@@ -3,15 +3,17 @@
 {% load widget_tweaks %}
 {%load static%}
 <head>
-        <!-- Font special for pages-->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
+          rel="stylesheet">
 
-        <!-- Main CSS-->
-    
-        <link href="{% static "css/main.css" %}"rel="stylesheet" media="all">
+    <!-- Main CSS-->
+
+    <link href="{% static " css
+    /main.css" %}"rel="stylesheet" media="all">
 </head>
-<div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
-    <div class="wrapper wrapper--w790">
+<!--<div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+    <div class="wrapper wrapper&#45;&#45;w790">
       
         <div class="card card-5">
             <div class="card-heading">
@@ -25,7 +27,7 @@
                         <div class="name">First Name</div>
                         <div class="value">
                             <div class="input-group">
-                                {% render_field userForm.first_name|attr:'required:true'  class="input--style-5"  %}
+                                {% render_field userForm.first_name|attr:'required:true'  class="input&#45;&#45;style-5"  %}
                             </div>
                         </div>
                     </div>
@@ -34,7 +36,7 @@
                         <div class="name">Last Name</div>
                         <div class="value">
                             <div class="input-group">
-                                {% render_field userForm.last_name|attr:'required:true'  class="input--style-5"  %}
+                                {% render_field userForm.last_name|attr:'required:true'  class="input&#45;&#45;style-5"  %}
                             </div>
                         </div>
                     </div>
@@ -43,7 +45,7 @@
                         <div class="name">Username</div>
                         <div class="value">
                             <div class="input-group">
-                                {% render_field userForm.username|attr:'required:true'  class="input--style-5"  %}
+                                {% render_field userForm.username|attr:'required:true'  class="input&#45;&#45;style-5"  %}
                             </div>
                         </div>
                     </div>
@@ -52,7 +54,7 @@
                         <div class="name">Password</div>
                         <div class="value">
                             <div class="input-group">
-                                {% render_field userForm.password|attr:'required:true'  class="input--style-5"  %}
+                                {% render_field userForm.password|attr:'required:true'  class="input&#45;&#45;style-5"  %}
                             </div>
                         </div>
                     </div>
@@ -64,7 +66,7 @@
                         <div class="name">Blood Group</div>
                         <div class="value">
                             <div class="input-group">
-                                <div class="rs-select2 js-select-simple select--no-search">
+                                <div class="rs-select2 js-select-simple select&#45;&#45;no-search">
                                     <select name="bloodgroup">
                                         <option disabled="disabled" selected="selected">Choose option</option>
                                         <option>O+</option>
@@ -87,7 +89,7 @@
                         <div class="name">Address</div>
                         <div class="value">
                             <div class="input-group">
-                                {% render_field donorForm.address|attr:'required:true'  class="input--style-5"  %}
+                                {% render_field donorForm.address|attr:'required:true'  class="input&#45;&#45;style-5"  %}
                             </div>
                         </div>
                     </div>
@@ -96,7 +98,7 @@
                         <div class="name">Mobile</div>
                         <div class="value">
                             <div class="input-group">
-                                {% render_field donorForm.mobile|attr:'required:true'  class="input--style-5"  %}
+                                {% render_field donorForm.mobile|attr:'required:true'  class="input&#45;&#45;style-5"  %}
                             </div>
                         </div>
                     </div>
@@ -105,7 +107,7 @@
                         <div class="name">Profile Pic</div>
                         <div class="value">
                             <div class="input-group">
-                                {% render_field donorForm.profile_pic|attr:'required:true'  class="input--style-5"  %}
+                                {% render_field donorForm.profile_pic|attr:'required:true'  class="input&#45;&#45;style-5"  %}
                             </div>
                         </div>
                     </div>
@@ -113,7 +115,7 @@
 
 
                     <div>
-                        <button class="btn btn--radius-2 btn-danger" type="submit">Update</button>
+                        <button class="btn btn&#45;&#45;radius-2 btn-danger" type="submit">Update</button>
                     </div>
                 </form>
                 <br>
@@ -122,6 +124,54 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
+<div class="container-fluid my-5">
+            {% include "appointments/message.html" %}
+    <form class="row g-3" method="POST" autocomplete="off" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <img src="{% static donor.profile_pic.url %}" alt="Profile Pic" class="img-thumbnail"/>
+            </div>
+            <div class="row col-md-8">
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label" for="autoSizingInputGroup">Username</label>
+                    <div class="input-group">
+                        <div class="input-group-text">@</div>
+                        <input type="text" class="form-control" disabled id="autoSizingInputGroup" value="{{user.username}}">
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" value="{{ donor.get_name }}" readonly>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ donor.email }}" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" value="{{ donor.address }}" readonly>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label">Mobile</label>
+                    <input type="text" class="form-control" value="{{ donor.mobile }}" disabled>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label">Blood Group Current: {{donor.bloodgroup }}</label>
+                    {% render_field donorForm.bloodgroup class="form-control" %}
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label class="form-label">Status: Current: {{donor.status}}</label>
+                    {% render_field donorForm.status class="form-control" %}
+                </div>
+            </div>
+        </div>
 
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Update/ Approve</button>
+        </div>
+    </form>
+</div>
 {% endblock content %}

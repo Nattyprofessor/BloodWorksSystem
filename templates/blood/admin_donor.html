@@ -3,8 +3,8 @@
 {% load widget_tweaks %}
 {%load static%}
 <br><br>
-<div class="container">
-    <H4 class="text-center">DONOR DETAILS</H4><br>
+<div class="container my-5">
+    <H4 class="text-center"> APPROVED DONORS</H4><br>
     <table class="table table-light table-hover table-bordered table-striped">
         <thead class="bg-info">
             <tr>
@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for t in donors %}
+            {% for t in approved_donors %}
             <tr>
                 <td> {{t.get_name}}</td>
                 <td> <img src="{% static t.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
@@ -26,14 +26,80 @@
                 <td>{{t.mobile}}</td>
                 
                 <td class="text-right">
-                    <button class="btn btn-primary badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'update-donor' t.id  %}">EDIT</a> </button>
-                    <button class="btn btn-danger badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.id  %}">DELETE</a> </button>
+                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.id %}">EDIT</a>
+                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.id  %}">DELETE</a>
                 </td>
             </tr>
             {% endfor %}
 
         </tbody>
     
+    </table>
+</div>
+<div class="container my-5">
+    <H4 class="text-center"> PENDING DONORS</H4><br>
+    <table class="table table-light table-hover table-bordered table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Profile</th>
+                <th scope="col">Blood Group</th>
+                <th scope="col">Address</th>
+                <th scope="col">Mobile</th>
+                <th class="text-right">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in pending_donors %}
+            <tr>
+                <td> {{t.get_name}}</td>
+                <td> <img src="{% static t.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
+                <td>{{t.bloodgroup}}</td>
+                <td>{{t.address}}</td>
+                <td>{{t.mobile}}</td>
+
+                <td class="text-right">
+                    <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.id  %}">EDIT</a>
+                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.id  %}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+</div>
+<div class="container my-5">
+    <H4 class="text-center"> REJECTED DONORS</H4><br>
+    <table class="table table-light table-hover table-bordered table-striped">
+        <thead class="bg-info">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Profile</th>
+                <th scope="col">Blood Group</th>
+                <th scope="col">Address</th>
+                <th scope="col">Mobile</th>
+                <th class="text-right">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in rejected_donors %}
+            <tr>
+                <td> {{t.get_name}}</td>
+                <td> <img src="{% static t.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
+                <td>{{t.bloodgroup}}</td>
+                <td>{{t.address}}</td>
+                <td>{{t.mobile}}</td>
+
+                <td class="text-right">
+                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.id  %}">EDIT</a>
+                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.id  %}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
     </table>
 </div>
 

@@ -1,19 +1,22 @@
 from django.shortcuts import render, redirect, reverse
 from . import forms, models
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, Count
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 from django.conf import settings
 from datetime import date, timedelta
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
-from donor import models as dmodels
+from donor import models as dmodels, functions
 from patient import models as pmodels
 from donor import forms as dforms
 from patient import forms as pforms
 from appointments import models as amodels
 from appointments import forms as aforms
+
+
 def home_view(request):
     x = models.Stock.objects.all()
     print(x)
@@ -86,7 +89,7 @@ def admin_dashboard_view(request):
         'AB2': models.Stock.objects.get(bloodgroup="AB-"),
         'O1': models.Stock.objects.get(bloodgroup="O+"),
         'O2': models.Stock.objects.get(bloodgroup="O-"),
-        'totaldonors': dmodels.Donor.objects.all().count(),
+        'totaldonors': dmodels.Donor.objects.all().filter(status='Approved').count(),
         'totalbloodunit': totalunit['unit__sum'],
         'totalrequest': models.BloodRequest.objects.all().count(),
         'totalapprovedrequest': models.BloodRequest.objects.all().filter(status='Approved').count()
@@ -120,29 +123,51 @@ def admin_blood_view(request):
 
 @login_required(login_url='adminlogin')
 def admin_donor_view(request):
-    donors = dmodels.Donor.objects.all()
-    return render(request, 'blood/admin_donor.html', {'donors': donors})
+    approved_donors = dmodels.Donor.objects.all().filter(status='Approved')
+    pending_donors = dmodels.Donor.objects.all().filter(status='Pending')
+    rejected_donors = dmodels.Donor.objects.all().filter(status='Rejected')
+    content = {
+        'approved_donors': approved_donors,
+        'pending_donors': pending_donors,
+        'rejected_donors': rejected_donors
+    }
+    return render(request, 'blood/admin_donor.html', context=content)
 
 
 @login_required(login_url='adminlogin')
-def update_donor_view(request, pk):
-    donor = dmodels.Donor.objects.get(id=pk)
+def update_donor_view(request, id):
+    donor = dmodels.Donor.objects.get(id=id)
     user = dmodels.User.objects.get(id=donor.user_id)
+
     userForm = dforms.DonorUserForm(instance=user)
     donorForm = dforms.DonorForm(request.FILES, instance=donor)
-    mydict = {'userForm': userForm, 'donorForm': donorForm}
+    mydict = {'userForm': userForm, 'donorForm': donorForm, 'user': user, 'donor': donor}
+
     if request.method == 'POST':
         userForm = dforms.DonorUserForm(request.POST, instance=user)
         donorForm = dforms.DonorForm(request.POST, request.FILES, instance=donor)
-        if userForm.is_valid() and donorForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
-            user.save()
-            donor = donorForm.save(commit=False)
-            donor.user = user
-            donor.bloodgroup = donorForm.cleaned_data['bloodgroup']
-            donor.save()
-            return redirect('admin-donor')
+
+        donor.status = donorForm.data['status']
+        donor.bloodgroup = donorForm.data['bloodgroup']
+
+        donor.save(update_fields=['status', 'bloodgroup'])
+        messages.success(request, "Donor status has been updated")
+
+        if donor.status == "Approved":
+            if str(type(
+                    donor.donor_card_code)) == "<class 'NoneType'>":  # means that the no card has ever been generated for the donor
+                code = f'{donor.address} - {donor.user_id}'
+                card_id = functions.generate_id_document(donor.get_name, donor, code)
+                if card_id != "error":
+                    donor.donor_card_code = card_id
+                    donor.save(update_fields=['donor_card_code'])
+                    messages.success(request, "Donor ID Card has been generated and saved.")
+                else:
+                    messages.error(request, "There was an error in generating the donor's card id")
+                    messages.error(request, "Please login as the root admin and perform the task manually")
+            else:
+                print("the donor already has a donor card")
+
     return render(request, 'blood/update_donor.html', context=mydict)
 
 
@@ -154,6 +179,33 @@ def delete_donor_view(request, pk):
     donor.delete()
     return HttpResponseRedirect('/admin-donor')
 
+
+@login_required(login_url='adminlogin')
+def assign_volunteer_view(request, id):
+    volunteer = amodels.VolunteerRegistration.objects.get(id=id)
+    print(volunteer)
+
+    volunteer_form = aforms.VolunteerRegistrationForm(instance=volunteer, location=volunteer.location)
+    mydict = {'volunteerForm': volunteer_form, 'volunteer': volunteer,}
+
+    if request.method == 'POST':
+        volunteer_form = aforms.VolunteerRegistrationForm(request.POST,instance=volunteer)
+
+        drive = models.BloodDrives.objects.get(id = volunteer_form.data['blood_drive'])
+
+        volunteer.blood_drive = drive
+
+        volunteer.save(update_fields=['blood_drive'])
+        messages.success(request, "Volunteer has been assigned")
+
+    return render(request, 'blood/assign_volunteer.html', context=mydict)
+
+@login_required(login_url='adminlogin')
+def reject_volunteer_view(request, pk):
+    volunteer = amodels.VolunteerRegistration.objects.get(id=id)
+
+    volunteer.delete()
+    return HttpResponseRedirect('/admin-volunteers')
 
 @login_required(login_url='adminlogin')
 def admin_patient_view(request):
@@ -268,13 +320,18 @@ def reject_donation_view(request, pk):
     donation.save()
     return HttpResponseRedirect('/admin-donation')
 
+
 @login_required(login_url='adminlogin')
 def admin_volunteers_view(request):
     volunteers = amodels.VolunteerRegistration.objects.all()
     return render(request, 'blood/admin_volunteers.html', {'volunteers': volunteers})
 
+
 @login_required(login_url='adminlogin')
 def admin_blood_drives_view(request):
-    blood_drives = models.BloodDrives.objects.all()
+    # The Count function is used to get the number of volunteers in each BLoodDrives object
+    blood_drives = models.BloodDrives.objects.annotate(no_of_volunteers=Count('volunteerregistration'))
+
     hosted_drives = amodels.HostedBloodDrives.objects.all()
-    return render(request, 'blood/admin_blood_drives.html', {'blood_drives': blood_drives, 'hosted_drives': hosted_drives})
+    return render(request, 'blood/admin_blood_drives.html',
+                  {'blood_drives': blood_drives, 'hosted_drives': hosted_drives})

@@ -1,7 +1,6 @@
 from django.db import models
 from patient import models as pmodels
 from donor import models as dmodels
-
 # All counties in Kenya
 counties = {
     ("Baringo", "Baringo"),
@@ -100,6 +99,8 @@ class BloodDrives(models.Model):
     county = models.CharField(max_length=15, choices=counties)
     location_code = models.ForeignKey(LocationCodes, on_delete=models.CASCADE)
     date = models.DateField()
+    #volunteer_count = models.PositiveIntegerField
+    #volunteers = models.ManyToManyField(VolunteerRegistration, related_name="blood_drive")
     def __str__(self):
         return self.name
 
