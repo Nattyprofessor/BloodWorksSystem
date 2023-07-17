@@ -1,0 +1,94 @@
+{% extends 'volunteer/volunteerbase.html' %}
+{% block content %}
+<br><br>
+<div class="container">
+    <div class="row">
+
+        <div class="col-12 bg-white px-3 mb-3 pb-3">
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Volunteer ID</p>
+                            <p class="py-2 text-muted">{{ volunteer.volunteer_id }}</p>
+                        </div>
+            <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Volunteer UserName</p>
+                            <p class="py-2 text-muted">{{ volunteer.user }}</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Full Name</p>
+                            <p class="py-2 text-muted">{{ volunteer.name }}</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Email</p>
+                            <p class="py-2 text-muted">{{ volunteer.email }}</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Phone</p>
+                            <p class="py-2 text-muted">{{ volunteer.phone }}</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <p class="py-2">Station</p>
+                            <p class="py-2 text-muted">{{ volunteer.blood_drive }}</p>
+                        </div>
+                    </div>
+
+        <div class="row row-cols-2 row-cols-lg-4">
+      <div class="col">
+        <div class="card bg-light">
+          <div class="card-body">
+              <div class="blood">
+                <i class="fas fa-sync-alt xyz"></i>
+              </div><br>
+              <div>
+                Donors Served <br>
+                  {{donors_served_count}}
+              </div>                            
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card bg-light">
+            <div class="card-body">
+                <div class="blood">
+                  <i class="fas fa-sync xyz"></i>
+                </div><br>
+                <div>
+                    Pending Exam Results <br>
+                    {{requestpending}}
+                </div>                            
+            </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card bg-light">
+              <div class="card-body">
+                  <div class="blood">
+                    <i class="fas fa-check-circle xyz"></i>
+                  </div><br>
+                  <div>
+                       Completed Pre-Exams {{exams_count}}
+                  </div>                            
+              </div>
+            </div>
+      </div>
+      <div class="col">
+          <div class="card bg-light">
+              <div class="card-body">
+                  <div class="blood">
+                    <i class="fas fa-times-circle xyz"></i>
+                  </div><br>
+                  <div>
+                       Rejected Donors <br>
+                      {{requestrejected}}
+                  </div>                            
+              </div>
+            </div>
+        </div>
+
+            </div>
+    </div>
+
+
+</div>
+
+
+{% endblock content %}

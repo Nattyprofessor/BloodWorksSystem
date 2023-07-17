@@ -31,6 +31,8 @@
 					<div class="card shadow-lg my-5">
 						<div class="card-body p-5">
 							<h1 class="fs-4 card-title fw-bold mb-4">Donor Login</h1>
+							                        {% include "appointments/message.html" %}
+
 							<form method="POST">
 								{% csrf_token %}
 								<div class="mb-3">

@@ -1,6 +1,9 @@
+import uuid
+
 from django.db import models
+
 from patient import models as pmodels
-from donor import models as dmodels
+
 # All counties in Kenya
 counties = {
     ("Baringo", "Baringo"),
@@ -74,7 +77,7 @@ class Stock(models.Model):
 
 class BloodRequest(models.Model):
     request_by_patient = models.ForeignKey(pmodels.Patient, null=True, on_delete=models.CASCADE)
-    request_by_donor = models.ForeignKey(dmodels.Donor, null=True, on_delete=models.CASCADE)
+    #request_by_donor = models.ForeignKey(dmodels.Donor, null=True, on_delete=models.CASCADE)
     patient_name = models.CharField(max_length=30)
     patient_age = models.PositiveIntegerField()
     reason = models.CharField(max_length=500)
@@ -94,6 +97,7 @@ class LocationCodes(models.Model):
 
 # This model contains all blood drives in all counties in the country
 class BloodDrives(models.Model):
+    drive_id = models.CharField(primary_key=True,default=uuid.uuid4(), max_length=20)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=40)
     county = models.CharField(max_length=15, choices=counties)

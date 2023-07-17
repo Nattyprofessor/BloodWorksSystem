@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
@@ -105,6 +107,8 @@ class Requests(models.Model):
 #
 #
 class VolunteerRegistration(models.Model):
+    volunteer_id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=20)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=2)
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(validators=[phoneNumberRegex], unique=True, max_length=16)
@@ -119,7 +123,7 @@ class VolunteerRegistration(models.Model):
 class HostedBloodDrives(models.Model):
     name = models.CharField(max_length=100)
     organization = models.CharField(max_length=100)
-    attendees = models.PositiveIntegerField(max_length=100)
+    attendees = models.PositiveIntegerField()
     phone = models.CharField(validators=[phoneNumberRegex], unique=True, max_length=16)
     email = models.EmailField()
     address = models.CharField(max_length=40)

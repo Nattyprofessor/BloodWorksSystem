@@ -15,10 +15,32 @@ class DonorUserForm(forms.ModelForm):
 class DonorForm(forms.ModelForm):
     class Meta:
         model = models.Donor
-        fields = ['status','bloodgroup', 'address', 'mobile','email', 'profile_pic']
+        fields = ['status', 'bloodgroup', 'address', 'mobile', 'email', 'profile_pic']
+
+
+class SearchDonor(forms.Form):
+    search_donor = forms.CharField()
+
+
+class DonorHealthForm(forms.ModelForm):
+    class Meta:
+        model = models.DonorHealthInfo
+        fields = ['donor_id', 'taken_on', 'blood_group', 'height', 'weight', 'gender', 'next_safe_date']
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 
 class DonationForm(forms.ModelForm):
     class Meta:
         model = models.BloodDonate
-        fields = ['age', 'bloodgroup', 'disease', 'unit']
+        fields = ['volunteer_id', 'donation_id', 'donor', 'age', 'blood_group', 'disease', 'unit', 'donation_type',
+                  'status', 'created_date']
+        widgets = {'date': DateInput()}
+
+
+class PreExamForm(forms.ModelForm):
+    class Meta:
+        model = models.PreExamInfo
+        fields = ['donor_id', 'haemoglobin_gDL', 'temperature_C', 'blood_pressure', 'pulse_rate_BPM']

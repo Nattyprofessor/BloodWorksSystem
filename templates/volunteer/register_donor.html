@@ -1,0 +1,119 @@
+{% extends 'volunteer/volunteerbase.html' %}
+{%load static%}
+{% load widget_tweaks %}
+{% block content %}
+
+		<div class="container-fluid">
+			<div class="row justify-content-sm-center">
+				<div class="col-12 p-t-45 p-b-20">
+					<div class="card shadow-lg my-5">
+						<div class="card-body p-5">
+							<h1 class="fs-4 card-title fw-bold mb-4">Donor Registration</h1>
+                                        {% include "appointments/message.html" %}
+							<form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row row-cols-2">
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted">Profile Picture</label>
+                                        <div class="input-group">
+                                            {% render_field donorForm.profile_pic|attr:'required:true'  class="form-control"  %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted" for="username">UserName: Don't Alter</label>
+                                        <div class="input-group" id="username">
+                                            {% render_field userForm.username|attr:'required:true' value="user"  class="form-control" name="username" type="text"  %}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Name is required
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted" for="f_name">First Name</label>
+                                        <div class="input-group" id="f_name">
+                                            {% render_field userForm.first_name|attr:'required:true'  class="form-control" name="name" value="" type="text" id="name"  %}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Name is required
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted" for="l_name">Last Name</label>
+                                        <div class="input-group" id="l_name">
+                                            {% render_field userForm.last_name|attr:'required:true'  class="form-control" name="name" value="" type="text" id="name"  %}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Name is required
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted">E-Mail Address</label>
+                                            {% render_field donorForm.email|attr:'required:true'  class="form-control" name="email" placeholder="E-mail" type="email"  %}
+                                        <div class="invalid-feedback">
+                                            Email is invalid
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted">Mobile Number</label>
+                                        <div class="input-group">
+                                            {% render_field donorForm.mobile|attr:'required:true'  class="form-control" type="number" %}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted" for="password">Password: Don't alter</label>
+                                        <div class="input-group" id="password">
+                                            {% render_field userForm.password|attr:'required:true' value="user" class="form-control" type="password" name="password"  %}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Password is required
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted" for="password">Blood Group</label>
+                                        <div class="input-group">
+                                            {% render_field donorForm.bloodgroup|attr:'required:true' value="O-" class="form-control"  %}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Password is required
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-12 mb-3">
+                                        <label class="mb-2 text-muted">Address</label>
+                                        <div class="input-group">
+                                            {% render_field donorForm.address|attr:'required:true'  class="form-control"  %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 mb-3 visually-hidden">
+                                        <label class="mb-2 text-muted">Status</label>
+                                        <div class="input-group">
+                                            {% render_field donorForm.status|attr:'required:true'  value="Pending" class="form-control"  %}
+                                        </div>
+                                    </div>
+                                    <div class="align-items-center d-flex">
+									<button type="submit" class="btn btn-primary ms-auto">
+										Register
+									</button>
+								</div>
+                                </div>
+
+
+								<p class="form-text text-muted mb-3">
+									By registering you agree with our <a href="#"> terms and condition.</a>
+								</p>
+
+
+							</form>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+{% endblock %}

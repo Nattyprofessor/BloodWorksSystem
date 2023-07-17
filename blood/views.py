@@ -15,6 +15,7 @@ from donor import forms as dforms
 from patient import forms as pforms
 from appointments import models as amodels
 from appointments import forms as aforms
+from volunteer import function as vfunctions
 
 
 def home_view(request):
@@ -62,20 +63,28 @@ def is_donor(user):
     return user.groups.filter(name='DONOR').exists()
 
 
+def is_volunteer(user):
+    return user.groups.filter(name="VOLUNTEER").exists()
+
+
 def is_patient(user):
     return user.groups.filter(name='PATIENT').exists()
 
 
 def afterlogin_view(request):
     if is_donor(request.user):
+        print('is_User')
         return redirect('donor/donor-dashboard')
-
+    elif is_volunteer(request.user):
+        print('is_Volunteer')
+        return redirect('volunteer/volunteer-dashboard')
     elif is_patient(request.user):
+        print('is_Patient')
         return redirect('patient/patient-dashboard')
     else:
         return redirect('admin-dashboard')
 
-
+@user_passes_test(lambda user: user.is_superuser)
 @login_required(login_url='adminlogin')
 def admin_dashboard_view(request):
     totalunit = models.Stock.objects.aggregate(Sum('unit'))
@@ -136,7 +145,7 @@ def admin_donor_view(request):
 
 @login_required(login_url='adminlogin')
 def update_donor_view(request, id):
-    donor = dmodels.Donor.objects.get(id=id)
+    donor = dmodels.Donor.objects.get(donor_id=id)
     user = dmodels.User.objects.get(id=donor.user_id)
 
     userForm = dforms.DonorUserForm(instance=user)
@@ -173,39 +182,47 @@ def update_donor_view(request, id):
 
 @login_required(login_url='adminlogin')
 def delete_donor_view(request, pk):
-    donor = dmodels.Donor.objects.get(id=pk)
+    donor = dmodels.Donor.objects.get(donor_id=pk)
     user = User.objects.get(id=donor.user_id)
     user.delete()
     donor.delete()
     return HttpResponseRedirect('/admin-donor')
 
 
+@user_passes_test(lambda user: user.is_superuser)
 @login_required(login_url='adminlogin')
 def assign_volunteer_view(request, id):
-    volunteer = amodels.VolunteerRegistration.objects.get(id=id)
+    volunteer = amodels.VolunteerRegistration.objects.get(volunteer_id=id)
     print(volunteer)
 
     volunteer_form = aforms.VolunteerRegistrationForm(instance=volunteer, location=volunteer.location)
-    mydict = {'volunteerForm': volunteer_form, 'volunteer': volunteer,}
+    mydict = {'volunteerForm': volunteer_form, 'volunteer': volunteer, }
 
     if request.method == 'POST':
-        volunteer_form = aforms.VolunteerRegistrationForm(request.POST,instance=volunteer)
+        volunteer_form = aforms.VolunteerRegistrationForm(request.POST, instance=volunteer)
 
-        drive = models.BloodDrives.objects.get(id = volunteer_form.data['blood_drive'])
+        drive = models.BloodDrives.objects.get(drive_id=volunteer_form.data['blood_drive'])
 
         volunteer.blood_drive = drive
 
         volunteer.save(update_fields=['blood_drive'])
         messages.success(request, "Volunteer has been assigned")
 
+        # Create an account for the volunteer
+        volunteer.user = vfunctions.create_volunteer_account(volunteer)
+        volunteer.save(update_fields=['user'])
+        messages.success(request, "Volunteer account has been generated")
+
     return render(request, 'blood/assign_volunteer.html', context=mydict)
 
+
 @login_required(login_url='adminlogin')
-def reject_volunteer_view(request, pk):
-    volunteer = amodels.VolunteerRegistration.objects.get(id=id)
+def reject_volunteer_view(request, id):
+    volunteer = amodels.VolunteerRegistration.objects.get(volunteer_id=id)
 
     volunteer.delete()
     return HttpResponseRedirect('/admin-volunteers')
+
 
 @login_required(login_url='adminlogin')
 def admin_patient_view(request):
@@ -331,7 +348,12 @@ def admin_volunteers_view(request):
 def admin_blood_drives_view(request):
     # The Count function is used to get the number of volunteers in each BLoodDrives object
     blood_drives = models.BloodDrives.objects.annotate(no_of_volunteers=Count('volunteerregistration'))
-
+    # blood_drives = models.BloodDrives.objects.all()
     hosted_drives = amodels.HostedBloodDrives.objects.all()
+    # return render(request, 'blood/admin_blood.html')
     return render(request, 'blood/admin_blood_drives.html',
                   {'blood_drives': blood_drives, 'hosted_drives': hosted_drives})
+
+
+def get_station_report(request):
+    return render(request, 'blood/admin-dashboard.html')

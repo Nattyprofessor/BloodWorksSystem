@@ -26,8 +26,8 @@
                 <td>{{t.mobile}}</td>
                 
                 <td class="text-right">
-                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.id %}">EDIT</a>
-                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.id  %}">DELETE</a>
+                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.donor_id %}">EDIT</a>
+                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.donor_id  %}">DELETE</a>
                 </td>
             </tr>
             {% endfor %}
@@ -59,8 +59,8 @@
                 <td>{{t.mobile}}</td>
 
                 <td class="text-right">
-                    <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.id  %}">EDIT</a>
-                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.id  %}">DELETE</a>
+                    <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.donor_id  %}">EDIT</a>
+                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.donor_id  %}">DELETE</a>
                 </td>
             </tr>
             {% endfor %}
@@ -92,8 +92,8 @@
                 <td>{{t.mobile}}</td>
 
                 <td class="text-right">
-                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.id  %}">EDIT</a>
-                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.id  %}">DELETE</a>
+                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'update-donor' t.donor_id  %}">EDIT</a>
+                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'delete-donor' t.donor_id  %}">DELETE</a>
                 </td>
             </tr>
             {% endfor %}

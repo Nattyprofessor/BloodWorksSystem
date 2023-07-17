@@ -1,0 +1,61 @@
+{% extends 'volunteer/volunteerbase.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{%load static%}
+
+<div class="container-fluid p-t-45 p-b-50">
+
+    <div style="margin-left: 70px;" class="card card-5">
+        <div class="card-heading">
+            <h2 class="title">DONATE BLOOD</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.donor|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.donation_id|as_crispy_field }}
+                    </div>
+                </div>
+                {{ donationform.volunteer_id|as_crispy_field }}
+                {{ donationform.disease|as_crispy_field }}
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.age|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.blood_group|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.donation_type|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.unit|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.status|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ donationform.date|as_crispy_field  }}
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn--radius-2 btn-danger" type="submit">DONATE</button>
+                </div>
+            </form>
+            <br>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

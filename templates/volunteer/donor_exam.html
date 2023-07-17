@@ -1,0 +1,36 @@
+{% extends 'volunteer/volunteerbase.html' %}
+{% load widget_tweaks %}
+{%load static%}
+{% load crispy_forms_tags %}
+{% block content %}
+<head>
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
+          rel="stylesheet">
+
+    <!-- Main CSS-->
+
+    <link href="{% static " css/main.css" %}"rel="stylesheet" media="all">
+</head>
+
+<div class="container-fluid my-5">
+    <div class="row">
+    <h3>Search for the donor before updating his/her details</h3>
+
+    <form class="d-flex">
+         {% csrf_token %}
+        <input type="text" class="form-control" value="" disabled>
+        <button class="btn btn-outline-success" name="searchbtn" type="submit" disabled>Search</button>
+      </form>
+            {% include "appointments/message.html" %}
+    <form class="row g-3" method="post">
+        {% csrf_token %}
+        {{ examform|crispy }}
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Save Form</button>
+        </div>
+    </form>
+
+        </div>
+</div>
+{% endblock  %}

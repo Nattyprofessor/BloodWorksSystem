@@ -25,8 +25,8 @@
                 <td>{{t.location}}</td>
                 <td>{{t.reason}}</td>
                 <td class="text-right">
-                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'assign-volunteer' t.id %}">Assign</a>
-                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'reject-volunteer' t.id  %}">Reject</a>
+                     <a  class="btn btn-primary badge-pill" style="text-decoration: none;color: white;" href="{% url 'assign-volunteer' t.volunteer_id %}">Assign</a>
+                    <a  class="btn btn-danger badge-pill" style="text-decoration: none;color: white;" href="{% url 'reject-volunteer' t.volunteer_id  %}">Reject</a>
                 </td>
             </tr>
             {% endfor %}

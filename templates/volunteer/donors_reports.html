@@ -1,0 +1,24 @@
+{% extends 'volunteer/volunteerbase.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Donors Reports</title>
+</head>
+<body>
+    <h1>Donors Reports</h1>
+                {% include "appointments/message.html" %}
+
+    <a href="/volunteer/generate-donor-report" class="btn btn-primary">Generate Latest Report</a>
+    <div class="container-fluid row">
+    {% for report in reports %}
+        <div class="card col px-3 py-3 my-2 mx-2">
+            <h5 class="card-title">{{ report.title }}</h5>
+            <p>Created at: {{ report.created_at }}</p>
+            <a href="{% url 'download-report' report.report_id  %}">Download</a>
+        </div>
+    {% endfor %}
+        </div>
+</body>
+</html>
+{% endblock %}

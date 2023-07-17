@@ -52,20 +52,6 @@ def donor_dashboard_view(request):
     return render(request, 'donor/donor_dashboard.html', context=dict)
 
 
-def donate_blood_view(request):
-    donation_form = forms.DonationForm()
-    if request.method == 'POST':
-        donation_form = forms.DonationForm(request.POST)
-        if donation_form.is_valid():
-            blood_donate = donation_form.save(commit=False)
-            blood_donate.bloodgroup = donation_form.cleaned_data['bloodgroup']
-            donor = models.Donor.objects.get(user_id=request.user.id)
-            blood_donate.donor = donor
-            blood_donate.save()
-            return HttpResponseRedirect('donation-history')
-    return render(request, 'donor/donate_blood.html', {'donation_form': donation_form})
-
-
 def donation_history_view(request):
     donor = models.Donor.objects.get(user_id=request.user.id)
     donations = models.BloodDonate.objects.all().filter(donor=donor)

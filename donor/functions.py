@@ -39,7 +39,7 @@ def generate_id_document(name, donor, code):
             "document_template_id": "BCBAD6C6-B324-47BC-A990-76457E7BEBFE",
             "status": "pending",
             "payload": {
-                "qr_code": {"code": f"{code}", "name": f"#{donor.id}"},
+                "qr_code": {"code": f"{donor.donor_id}", "name": f"#{donor.donor_id}"},
                 "donor": {
                     "photo": f"{donor.profile_pic.url}",
                     "name": f"{name}", "email": f"{donor.email}", "blood_group": f"{donor.bloodgroup}"}

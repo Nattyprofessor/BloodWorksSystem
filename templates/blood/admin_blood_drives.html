@@ -26,10 +26,7 @@
                 <td>{{t.date}}</td>
                 <td>{{t.no_of_volunteers}}</td>
                 
-                <!--<td class="text-right"> Might be useful later
-                    <button class="btn btn-primary badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'update-patient' t.id  %}">EDIT</a> </button>
-                    <button class="btn btn-danger badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'delete-patient' t.id  %}">DELETE</a> </button>
-                </td>-->
+
             </tr>
             {% endfor %}
 
@@ -64,10 +61,6 @@
                 <td>{{t.attendees}}</td>
                 <td>{{t.date}}</td>
 
-                <!--<td class="text-right"> Might be useful later
-                    <button class="btn btn-primary badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'update-patient' t.id  %}">EDIT</a> </button>
-                    <button class="btn btn-danger badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'delete-patient' t.id  %}">DELETE</a> </button>
-                </td>-->
             </tr>
             {% endfor %}
 
