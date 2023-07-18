@@ -1,61 +1,191 @@
 {% extends 'donor/donorbase.html' %}
 {% block content %}
+{% load static %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+body {
+    background-color: #e2e8f0;
+
+}
+
+.breadcrumb {
+    background-color: #c5cee4;
+
+}
+
+.breadcrumb a {
+    text-decoration: none;
+}
+
+.container {
+    max-width: 1000px;
+    padding: 0;
+}
+
+p {
+    margin: 0;
+}
+
+.d-flex a {
+    text-decoration: none;
+    color: #686868;
+}
+
+.photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.fab.fa-twitter {
+    color: #8ab7f1;
+}
+
+.fab.fa-instagram {
+    color: #E1306C;
+}
+
+.fab.fa-facebook-f {
+    color: #5999ec;
+}
+</style>
+
+<div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-12 bg-white p-0 px-3 py-3 mb-3">
+                        <div class="d-flex flex-column align-items-center">
+                            <img class="photo"
+                                src="{% static donor.profile_pic.url %}"
+                                alt="">
+                            <p class="fw-bold h4 mt-3">{{ user.first_name }} {{ user.last_name }}</p>
+                            <p class="text-muted">Donor</p>
+                            <span class="badge rounded-pill bg-success my-2">{{donor.status}}</span>
+                            <div class="d-flex ">
+                                <a class="btn btn-primary follow me-2 text-white" href="{{ id_url }}">Download Donor ID</a>
+                                <div class="btn btn-outline-danger message">Send Complaint</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 bg-white p-0 px-2 pb-3 mb-3">
+
+                        <div class="d-flex justify-content-between border-bottom py-2 px-3">
+                            <p><span class="fab fa-twitter me-2"></span>Twitter</p>
+                            <a href="">N/A</a>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2 px-3">
+                            <p><span class="fab fa-instagram me-2"></span>Instagram</p>
+                            <a href="">N/A</a>
+                        </div>
+                        <div class="d-flex justify-content-between py-2 px-3">
+                            <p><span class="fab fa-facebook-f me-2"></span>facebook</p>
+                            <a href="">N/A</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 ps-md-4">
+                <div class="row">
+                    <div class="col-12 bg-white px-3 mb-3 pb-3">
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Full Name</p>
+                            <p class="py-2 text-muted">{{ user.first_name }} {{ user.last_name }}</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Email</p>
+                            <p class="py-2 text-muted">{{ donor.email }}</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="py-2">Phone</p>
+                            <p class="py-2 text-muted">{{ donor.mobile }}</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <p class="py-2">Address</p>
+                            <p class="py-2 text-muted">{{ donor.address }}</p>
+                        </div>
+                    </div>
+                    <div class="col-12 bg-white px-3 pb-2">
+                        <h6 class="d-flex align-items-center mb-3 fw-bold py-3"><i
+                                class="text-danger me-2">Quick</i>Info</h6>
+                        <p>Blood Group: {{info.blood_group}}</p>
+                        <p>Height: {{info.height }} cm</p>
+                        <p>Weight: {{info.weight }} kg</p>
+                        <p>Gender: {{info.gender}}</p>
+                        <p>Next Safe Date: {{info.next_safe_date}}</p>
+                        <br>
+                        <small>Donation target for the year</small>
+                        <div class="progress mb-3" style="height: 5px">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{donation_history}}0%"
+                                aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <br><br>
 <div class="container">
+    <div class="row justify-content-between">
 
-
-    <div class="row">
-
-      <div class="col-sm-3">
+      <div class="col">
         <div class="card bg-light">
           <div class="card-body">
               <div class="blood">
                 <i class="fas fa-sync-alt xyz"></i>
               </div><br>
               <div>
-                Request Made <br>
-                  {{requestmade}}
+                Donations Done<br>
+                  {{donation_history}}
               </div>                            
           </div>
         </div>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col">
         <div class="card bg-light">
             <div class="card-body">
                 <div class="blood">
                   <i class="fas fa-sync xyz"></i>
                 </div><br>
                 <div>
-                    Pending Request <br>
-                    {{requestpending}}
+                    Recent Donation Date<br>
+                    {{recent_date}}
                 </div>                            
             </div>
           </div>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col">
           <div class="card bg-light">
               <div class="card-body">
                   <div class="blood">
                     <i class="fas fa-check-circle xyz"></i>
                   </div><br>
                   <div>
-                       Approved Request<br>
-                      {{requestapproved}}
+                       Approved Donations<br>
+                      {{approved_donations}}
                   </div>                            
               </div>
             </div>
       </div>
-      <div class="col-sm-3">
+      <div class="col">
           <div class="card bg-light">
               <div class="card-body">
                   <div class="blood">
                     <i class="fas fa-times-circle xyz"></i>
                   </div><br>
                   <div>
-                       Rejected Request <br>
-                      {{requestrejected}}
+                       Rejected Donations <br>
+                      {{rejected_donations}}
                   </div>                            
               </div>
             </div>

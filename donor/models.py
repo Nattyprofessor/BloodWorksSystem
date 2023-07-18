@@ -3,6 +3,8 @@ import uuid
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 from appointments.models import VolunteerRegistration
 
 blood_groups = {('O+', 'O+'), ('O-', 'O-'), ('A+', 'A+'), ('A', 'A'), ('B+', 'B+'), ('B-', 'B-'), ('AB+', 'AB+'),
@@ -11,6 +13,8 @@ donation_types = {('Plasma', 'Plasma'), ('Blood', 'Blood'), ('Platelets', 'Plate
 
 
 class Donor(models.Model):
+    current_time = datetime.datetime.now()
+
     donor_id = models.CharField(primary_key=True, max_length=40, default=uuid.uuid4())
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='profile_pic/Donor/', null=True, blank=True)
@@ -22,7 +26,7 @@ class Donor(models.Model):
                               choices={('Pending', 'Pending'), ('Approved', 'Approved'), ('Rejected', 'Rejected')})
     donor_card_code = models.CharField(max_length=40, null=True, blank=True)
     served_by = models.ForeignKey(VolunteerRegistration,null=True, default="delete-101", on_delete=models.SET_DEFAULT, blank=True)
-    created_date = models.DateTimeField(auto_now=False, default=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    created_date = models.DateTimeField(auto_now_add=False,default=timezone.datetime.now())
     @property
     def get_name(self):
         return self.user.first_name + " " + self.user.last_name
@@ -70,7 +74,7 @@ class PreExamInfo(models.Model):
     pulse_rate_BPM = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=8, default="Pending",
                               choices={('Pending', 'Pending'), ('Approved', 'Approved'), ('Rejected', 'Rejected')})
-    created_date = models.DateTimeField(auto_now=False, default=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    created_date = models.DateTimeField(auto_now=False, default=timezone.datetime.now())
 
     def __str__(self):
         return str(self.donor_id)
@@ -95,7 +99,7 @@ class BloodDonate(models.Model):
     unit = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=20, default="Pending",
                               choices={('Pending', 'Pending'), ('Approved', 'Approved'), ('Rejected', 'Rejected')})
-    created_date = models.DateTimeField(auto_now=False, default=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    created_date = models.DateTimeField(auto_now=False, default=timezone.datetime.now())
 
     def __str__(self):
         return f'{self.donor.user.first_name}-{self.donation_id}'

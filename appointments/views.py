@@ -37,7 +37,7 @@ def show_drives(request):
     return render(request, 'appointments/blood_drives.html', {'blood_drives': drives})
 
 
-def volunteer(request):
+def volunteer_registration_view(request):
     if request.method == 'POST':
         form = VolunteerRegistrationForm(request.POST)
         if form.is_valid():

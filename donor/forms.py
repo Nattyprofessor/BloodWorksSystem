@@ -37,7 +37,7 @@ class DonationForm(forms.ModelForm):
         model = models.BloodDonate
         fields = ['volunteer_id', 'donation_id', 'donor', 'age', 'blood_group', 'disease', 'unit', 'donation_type',
                   'status', 'created_date']
-        widgets = {'date': DateInput()}
+        widgets = {'created_date': DateInput()}
 
 
 class PreExamForm(forms.ModelForm):

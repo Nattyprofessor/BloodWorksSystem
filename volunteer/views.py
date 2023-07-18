@@ -24,11 +24,17 @@ DONOR_TEMPLATE = 'B55206FC-3781-4896-A20F-CBABEAB94F40'
 def volunteer_dashboard_view(request):
     volunteer = a_models.VolunteerRegistration.objects.get(user=request.user.id)
 
-    pre_exam_counts = d_models.PreExamInfo.objects.filter(volunteer_id=volunteer.volunteer_id).count
-    donors_served_count = d_models.Donor.objects.filter(served_by=volunteer.volunteer_id).count
+    donation_reports = DonationReport.objects.filter(volunteer = volunteer.volunteer_id).count()
+    donor_reports = DonorReport.objects.filter(volunteer = volunteer.volunteer_id).count()
+
+    pre_exam_counts = d_models.PreExamInfo.objects.filter(volunteer_id=volunteer.volunteer_id).count()
+    pending_exams = d_models.PreExamInfo.objects.all().filter(volunteer_id=volunteer.volunteer_id).filter(status='Pending').count(),
+
+    donors_served_count = d_models.Donor.objects.filter(served_by=volunteer.volunteer_id).count()
     print(volunteer.volunteer_id)
     return render(request, 'volunteer/volunteer_dashboard.html',
-                  {'volunteer': volunteer, 'exams_count': pre_exam_counts, 'donors_served_count': donors_served_count})
+                  {'volunteer': volunteer, 'exams_count': pre_exam_counts, 'donors_served_count': donors_served_count,
+                   'reports_count': donation_reports + donor_reports, 'pending_exams':len(pending_exams) })
 
 
 def search_donor(request):
@@ -145,6 +151,7 @@ def donate_blood_view(request):
             blood_donate = donationform.save(commit=False)
 
             current_date = datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
+            blood_donate.current_date = current_date
             blood_donate.donation_id = f"{station_id}-D-{random.randrange(0, 100)}-{str(current_date)}"
             blood_donate.save()
             return HttpResponseRedirect('/volunteer/volunteer-dashboard/')
@@ -227,7 +234,7 @@ def generate_donor_report(request):
     return HttpResponseRedirect(('/volunteer/donation-reports'))
 
 
-# @user_passes_test(lambda user: user.is_staff) remove for more protection
+@user_passes_test(lambda user: user.is_staff)
 def generate_station_report(request):
     the_volunteer = a_models.VolunteerRegistration.objects.get(user=request.user)
     current_date = datetime.datetime.now().strftime("%Y/%m/%d")

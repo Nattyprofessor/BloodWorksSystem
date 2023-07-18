@@ -2,11 +2,11 @@ from django.urls import path
 
 from django.contrib.auth.views import LoginView, PasswordResetView
 
-import appointments
+from appointments import views as a_views
 from . import views
 
 urlpatterns = [
-    path('registration', appointments.views.volunteer, name='volunteer'),
+    path('volunteer-registration/', a_views.volunteer_registration_view, name='volunteer-registration'),
     path('volunteerlogin/', LoginView.as_view(template_name='volunteer/volunteer_login.html'),name='volunteerlogin'),
     path('volunteer-dashboard/', views.volunteer_dashboard_view, name='volunteer-dashboard'),
     path('update-donor/', views.search_donor, name='update-donor'),
