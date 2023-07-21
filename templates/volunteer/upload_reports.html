@@ -1,0 +1,26 @@
+{% extends 'volunteer/volunteerbase.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Donors Reports</title>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+</head>
+<body>
+    <h1>Upload Donors Reports</h1>
+                {% include "appointments/message.html" %}
+
+    <div class="container">
+        <form action="/volunteer/upload/" class="dropzone" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="fallback">
+                <input name="file" type="file" multiple />
+            </div>
+        <button type="submit" class="btn btn-primary">Upload Resumes</button>
+    </form>
+    </div>
+</body>
+</html>
+{% endblock %}

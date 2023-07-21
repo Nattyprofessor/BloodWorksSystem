@@ -17,7 +17,7 @@ class Donor(models.Model):
 
     donor_id = models.CharField(primary_key=True, max_length=40, default=uuid.uuid4())
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to='profile_pic/Donor/', null=True, blank=True)
+    profile_pic = models.ImageField(upload_to='profile_pic/Donor/',default="profile/Donor/default.png", null=True, blank=True)
     bloodgroup = models.CharField(max_length=10, choices=blood_groups)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20, null=False, unique=True)

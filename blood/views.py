@@ -1,3 +1,5 @@
+import time
+
 from django.shortcuts import render, redirect, reverse
 from . import forms, models
 from django.db.models import Sum, Q, Count
@@ -15,12 +17,24 @@ from donor import forms as dforms
 from patient import forms as pforms
 from appointments import models as amodels
 from appointments import forms as aforms
-from volunteer import function as vfunctions
+from volunteer import function as vfunctions, models as vmodels
 
 
 def home_view(request):
     x = models.Stock.objects.all()
     print(x)
+
+    hospitals = models.BloodDrives.objects.all().filter(name__contains='Hospital').count()
+    donors = dmodels.Donor.objects.all().count()
+    blood = dmodels.BloodDonate.objects.all().count()
+    volunteers = amodels.VolunteerRegistration.objects.all().count()
+
+    info = {
+        'hospitals': hospitals,
+        'donors': donors,
+        'blood': blood,
+        'volunteers': volunteers
+    }
     if len(x) == 0:
         blood1 = models.Stock()
         blood1.bloodgroup = "A+"
@@ -56,7 +70,7 @@ def home_view(request):
 
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
-    return render(request, 'blood/index.html')
+    return render(request, 'blood/index.html', context={'info':info})
 
 
 def is_donor(user):
@@ -357,3 +371,27 @@ def admin_blood_drives_view(request):
 
 def get_station_report(request):
     return render(request, 'blood/admin-dashboard.html')
+
+def blood_request_view(request):
+    request_form = forms.RequestForm()
+    if request.method == 'POST':
+        request_form = forms.RequestForm(request.POST, request.FILES)
+        if request_form.is_valid():
+            blood_request = request_form.save(commit=False)
+            blood_request.blood_group = request_form.cleaned_data['blood_group']
+            blood_request.save()
+
+            messages.success(request, "Successfully submitted your blood request form. \n"
+                                      "You will be redirected shortly")
+            return render(request, 'blood/blood_request.html', {'request_form': request_form})
+            time.sleep(1)
+            return HttpResponseRedirect('/')
+        else:
+            return render(request, 'blood/blood_request.html', {'request_form': request_form})
+    return render(request, 'blood/blood_request.html', {'request_form': request_form})
+
+
+def view_all_reports(request):
+    donor_reports = vmodels.DonorReport.objects.all()
+    donation_reports = vmodels.DonationReport.objects.all()
+    return render(request, 'blood/admin_view_reports.html', {'donor_reports': donor_reports, 'donation_reports': donation_reports})

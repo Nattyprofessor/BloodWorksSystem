@@ -1,0 +1,81 @@
+
+{% block content %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{%load static%}
+<head>
+        <!-- Font special for pages-->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+
+        <!-- Main CSS-->
+    
+        <link href="{% static "css/main.css" %}"rel="stylesheet" media="all">
+</head>
+{% include "blood/navbar.html" %}
+<div class="container-fluid p-t-45 p-b-50">
+
+    <div style="margin-left: 70px;" class="card card-5">
+        <div class="card-heading">
+            <h2 class="title">BLOOD REQUEST FORM</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row justify-content-evenly">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ request_form.patient_name|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ request_form.patient_age|as_crispy_field }}
+                    </div>
+                </div>
+                {{ request_form.email|as_crispy_field }}
+                {{ request_form.document|as_crispy_field }}
+                <div class="row justify-content-evenly">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ request_form.unit|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ request_form.blood_group|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row justify-content-evenly">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ request_form.id_f_photo|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ request_form.id_b_photo|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-row ">
+                    <div class="form-group col-md-6 mb-0 visually-hidden">
+                        {{ request_form.status|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0 visually-hidden">
+                        {{ request_form.date|as_crispy_field  }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0 ">
+                        {{ request_form.reason|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row justify-content-evenly">
+                    <div class="form-group col-md-6 mb-0 ">
+                        {{ request_form.referred_person|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0 ">
+                        {{ request_form.referral_mobile|as_crispy_field  }}
+                    </div>
+
+                </div>
+                <div>
+                    <button class="btn btn--radius-2 btn-danger" type="submit">SUBMIT REQUEST</button>
+                </div>
+            </form>
+            <br>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

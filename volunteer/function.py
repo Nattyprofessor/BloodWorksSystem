@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import requests
 from django.contrib.auth.models import User, Group
@@ -33,7 +34,7 @@ def generate_exam_id():
     return f"EXAM-{random_num}-{current_time}"
 
 
-def generate_my_report(report_type, template_id, data_array, volunteer_details, reports_count):
+def generate_my_report(report_type, template_id, payload):
     current_date = datetime.datetime.now().strftime("%d/%m/%Y")
 
     endpoint = 'https://api.pdfmonkey.io/api/v1/documents'
@@ -42,18 +43,9 @@ def generate_my_report(report_type, template_id, data_array, volunteer_details, 
         "document": {
             "document_template_id": f"{template_id}",
             "status": "pending",
-            "payload": {
-                "station_name": f"{volunteer_details.blood_drive.name}",
-                "station_id": f"{volunteer_details.blood_drive.drive_id}",
-                "volunteer_id": f"{volunteer_details.volunteer_id}",
-                "document_number": f"000{reports_count}",
-                "document_date": f"{current_date}",
-
-                "donors": data_array
-            }
-            ,
+            "payload": payload,
             "meta": {
-                "_filename": f"{report_type}-report-{volunteer_details.volunteer_id}.pdf"
+                "_filename": f"{report_type}-report-{payload['volunteer_id']}.pdf"
             }
         }
     }
@@ -69,8 +61,24 @@ def generate_my_report(report_type, template_id, data_array, volunteer_details, 
         return 'error'
 
 
+def generate_doc_path(report_id, meta,report_type):
+    report_url = get_document_url(report_id)
+    document_response = requests.get(report_url)
+    if document_response.status_code == 200:
+        # convert the meta data to json format
+        report_dict = json.loads(meta)
+
+        print(f'This is the document path: {report_dict["_filename"]}')
+
+        # obtain the filename from the report_dict  and write the document to media files
+        open(f'static/reports/{report_type}/{report_dict["_filename"]}', 'wb').write(document_response.content)
+        doc_path = f'reports/{report_type}/{report_dict["_filename"]}'
+
+        return doc_path
+    else:
+        return ''
 def create_station_report(payload):
-    current_date = datetime.datetime.now().strftime("%d/%m/%Y")
+    current_date = datetime.datetime.now().strftime("%d-%m-%Y")
 
     endpoint = 'https://api.pdfmonkey.io/api/v1/documents'
     header = {f'Authorization': f'Bearer {config.pdf_monkey_key}', 'Content-Type': 'application/json'}
@@ -111,7 +119,7 @@ def get_document_url(report_id):
     response = requests.get(endpoint, headers=header)
     data = response.json()
 
-    print("Download x",data)
+    print("Download x", data)
     if response.status_code == 200:
         return data['document']['download_url']
     else:

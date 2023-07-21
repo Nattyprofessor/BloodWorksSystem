@@ -9,7 +9,7 @@
     <h1>Donation Reports</h1>
                 {% include "appointments/message.html" %}
     <a href="/volunteer/generate-donation-report" class="btn btn-primary">Generate Latest Report</a>
-    <div class="container-fluid row">
+    <div class="container-fluid row row-cols-3">
     {% for report in reports %}
         <div class="card col px-3 py-3 my-2 mx-2">
             <h5 class="card-title">{{ report.title }}</h5>

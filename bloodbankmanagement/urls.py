@@ -14,11 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
 from django.contrib.auth.views import LogoutView, LoginView
-from blood import views
+from django.urls import path, include
+
 from appointments import views as a_views
-from volunteer import  views as v_views
+from blood import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,7 +32,7 @@ urlpatterns = [
     path('blood_drives/', a_views.show_drives, name='blood_drives'),
 
     path('host-blood-drive/', a_views.host_blood_drive, name='host-blood-drive'),
-
+    path('blood_request/', views.blood_request_view, name='blood_request'),
 
     path('', views.home_view, name=''),
     path('logout', LogoutView.as_view(template_name='blood/logout.html'), name='logout'),
@@ -59,7 +59,7 @@ urlpatterns = [
     path('admin-request-history', views.admin_request_history_view, name='admin-request-history'),
     path('update-approve-status/<int:pk>', views.update_approve_status_view, name='update-approve-status'),
     path('update-reject-status/<int:pk>', views.update_reject_status_view, name='update-reject-status'),
-
+    path('view-all-reports', views.view_all_reports, name='view-all-reports'),
     path('get-station-report', views.get_station_report, name='get-station-report'),
 
 ]

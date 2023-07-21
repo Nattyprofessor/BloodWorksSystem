@@ -54,6 +54,8 @@ counties = {
 
 # Register your models here.
 admin.site.register(LocationCodes)
+admin.site.register(Stock)
+admin.site.register(BloodRequest)
 
 
 def generate_drive_id(location_code, county):

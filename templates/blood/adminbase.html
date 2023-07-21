@@ -97,24 +97,24 @@ color: red;
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
                         <a href="/" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                            <i class="fs-4 fa fa-desktop"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="/admin-blood-drives" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Active Blood Drives</span>
+                            <i class="fs-4 fa fa-map-signs"></i> <span class="ms-1 d-none d-sm-inline">Active Blood Drives</span>
                         </a>
                     </li>
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi bi-journal-medical"></i> <span class="ms-1 d-none d-sm-inline">Generate Reports</span>
+                            <i class="fs-4 bi bi-journal-medical"></i> <span class="ms-1 d-none d-sm-inline">Reports</span>
                         </a>
                         <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                             <li class="w-100">
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Blood Reports</span></a>
+                                <a href="/view-all-reports" class="nav-link px-0"> <span class="d-none d-sm-inline">View All Reports</span></a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Donor Reports</span></a>
+                                <a href="/admin/volunteer/stationreport/" class="nav-link px-0"> <span class="d-none d-sm-inline">View Station Reports</span></a>
                             </li>
                         </ul>
                     </li>
@@ -127,9 +127,6 @@ color: red;
                                 <a href="/admin-donor" class="nav-link px-0"> <span class="d-none d-sm-inline">Donors</span></a>
                             </li>
                             <li>
-                                <a href="/admin-patient" class="nav-link px-0"> <span class="d-none d-sm-inline">Patients</span></a>
-                            </li>
-                            <li>
                                 <a href="/admin-volunteers" class="nav-link px-0"> <span class="d-none d-sm-inline">Volunteers</span></a>
                             </li>
                         </ul>
@@ -137,25 +134,25 @@ color: red;
 
                     <li>
                         <a href="/admin-donation" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Donations</span> </a>
+                            <i class="fs-4 fa fa-tint"></i> <span class="ms-1 d-none d-sm-inline">Donations</span> </a>
                     </li>
                     <li>
                         <a href="/admin-request" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Blood Requests</span>
+                            <i class="fs-4 fa fa-inbox"></i> <span class="ms-1 d-none d-sm-inline">Blood Requests</span>
                         </a>
                     </li>
                     <li>
                         <a href="/admin-request-history" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Request History</span>
+                            <i class="fs-4 fa fa-history"></i> <span class="ms-1 d-none d-sm-inline">Request History</span>
                         </a>
                     </li>
                     <li>
                         <a href="/admin-blood" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Blood Stock</span> </a>
+                            <i class="fs-4 fas fa-chart-pie"></i> <span class="ms-1 d-none d-sm-inline">Blood Stock</span> </a>
                     </li>
                     <li>
                         <a href="/admin-appointment" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span
+                            <i class="fs-4 fa fa-calendar"></i> <span
                                 class="ms-1 d-none d-sm-inline">Show Appointments</span> </a>
                     </li>
                     <!-- <li>
@@ -200,7 +197,7 @@ color: red;
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" href="/admin"><i class="bi bi-person-lock"></i> Root Admin</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-person-fill-gear"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="/admin/auth/user/1/change/"><i class="bi bi-person-fill-gear"></i> Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

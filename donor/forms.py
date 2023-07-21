@@ -15,7 +15,7 @@ class DonorUserForm(forms.ModelForm):
 class DonorForm(forms.ModelForm):
     class Meta:
         model = models.Donor
-        fields = ['status', 'bloodgroup', 'address', 'mobile', 'email', 'profile_pic']
+        fields = ['status', 'bloodgroup', 'address', 'mobile', 'email', 'profile_pic', 'created_date']
 
 
 class SearchDonor(forms.Form):

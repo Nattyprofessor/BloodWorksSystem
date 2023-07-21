@@ -1,22 +1,28 @@
 import datetime
+import json
 import random
 import time
 import uuid
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.generic import TemplateView
+
 from donor.functions import notify_admin_about_new_donor
 from .models import *
+from blood import models as b_models
 from appointments import models as a_models, functions
 from donor import models as d_models, forms
 from .function import *
+from .forms import *
 
 # ####Constants for pdf template Ids
 DONATION_TEMPLATE = '77CCC284-F85A-4162-9AC6-F1CCA53F122F'
 DONOR_TEMPLATE = 'B55206FC-3781-4896-A20F-CBABEAB94F40'
+EXAM_TEMPLATE = '4BC03F18-668A-456B-B924-04CC41FE8077'
 
 
 # Create your views here.
@@ -24,17 +30,18 @@ DONOR_TEMPLATE = 'B55206FC-3781-4896-A20F-CBABEAB94F40'
 def volunteer_dashboard_view(request):
     volunteer = a_models.VolunteerRegistration.objects.get(user=request.user.id)
 
-    donation_reports = DonationReport.objects.filter(volunteer = volunteer.volunteer_id).count()
-    donor_reports = DonorReport.objects.filter(volunteer = volunteer.volunteer_id).count()
+    donation_reports = DonationReport.objects.filter(volunteer=volunteer.volunteer_id).count()
+    donor_reports = DonorReport.objects.filter(volunteer=volunteer.volunteer_id).count()
 
     pre_exam_counts = d_models.PreExamInfo.objects.filter(volunteer_id=volunteer.volunteer_id).count()
-    pending_exams = d_models.PreExamInfo.objects.all().filter(volunteer_id=volunteer.volunteer_id).filter(status='Pending').count(),
+    pending_exams = d_models.PreExamInfo.objects.all().filter(volunteer_id=volunteer.volunteer_id).filter(
+        status='Pending').count(),
 
     donors_served_count = d_models.Donor.objects.filter(served_by=volunteer.volunteer_id).count()
     print(volunteer.volunteer_id)
     return render(request, 'volunteer/volunteer_dashboard.html',
                   {'volunteer': volunteer, 'exams_count': pre_exam_counts, 'donors_served_count': donors_served_count,
-                   'reports_count': donation_reports + donor_reports, 'pending_exams':len(pending_exams) })
+                   'reports_count': donation_reports + donor_reports, 'pending_exams': len(pending_exams)})
 
 
 def search_donor(request):
@@ -82,19 +89,54 @@ def search_donor(request):
 
 
 def pre_exam_view(request):
+    the_volunteer = a_models.VolunteerRegistration.objects.get(user=request.user)
     # Check if the request is a post request.
     exam_form = forms.PreExamForm()
     search_form = forms.SearchDonor()
 
     if request.method == 'POST':
         exam_form = forms.PreExamForm(request.POST)
-
         if exam_form.is_valid():
             form = exam_form.save(commit=False)
             form.pre_exam_id = generate_exam_id()
 
             form.save()
 
+            donor = d_models.Donor.objects.get(donor_id=exam_form.data['donor_id'])
+
+            current_date = datetime.datetime.now().strftime("%d/%m/%Y")
+            payload = {
+                "volunteer_id": f"{the_volunteer.volunteer_id}",
+                "name": f"{donor.get_name}",
+                "donor_id": f"{donor.donor_id}",
+                "age": f"N/A",
+                "blood_group": f"{donor.bloodgroup}",
+                "station_name": f"{the_volunteer.blood_drive.name}",
+                "document_date": f"{current_date}",
+
+                "exam": {
+                    "volunteer_name": f"{the_volunteer.name}",
+                    "id": f"{form.pre_exam_id}",
+                    "haemoglobin_gDL": f"{exam_form.cleaned_data['haemoglobin_gDL']}",
+                    "temperature_C": f"{exam_form.cleaned_data['temperature_C']}",
+                    "blood_pressure": f"{exam_form.cleaned_data['blood_pressure']}",
+                    "pulse_rate_BPM": f"{exam_form.cleaned_data['pulse_rate_BPM']}",
+                }
+            }
+            report_data = generate_my_report('exam', EXAM_TEMPLATE, payload)
+
+            if report_data != 'error':
+                time.sleep(3)
+                url = get_document_url(report_data['document']['id'])
+
+                if url != 'error':
+                    return HttpResponseRedirect(url)
+
+                else:
+                    messages.error(request, "Some errors occured while generating the report")
+                    messages.error(request, report_data)
+                    return render(request, 'volunteer/donor_exam.html',
+                                  {'examform': exam_form, 'searchform': search_form})
             messages.success(request, "The exam form has been saved to the donor's details")
             return render(request, 'volunteer/donor_exam.html', {'examform': exam_form})
         else:
@@ -129,7 +171,7 @@ def register_donor(request):
             my_donor_group[0].user_set.add(user)
 
             user_name = user.first_name + " " + user.last_name
-            # notify_admin_about_new_donor(donor, user_name) # remove when uploading to server
+            notify_admin_about_new_donor(donor, user_name)  # remove when uploading to server
             return HttpResponseRedirect('/volunteer/update-donor')
         else:
             messages.error(request, 'There was an error in registering the donor')
@@ -154,6 +196,10 @@ def donate_blood_view(request):
             blood_donate.current_date = current_date
             blood_donate.donation_id = f"{station_id}-D-{random.randrange(0, 100)}-{str(current_date)}"
             blood_donate.save()
+
+            stock_count = b_models.Stock.objects.get(bloodgroup=blood_donate.blood_group)
+            stock_count.unit += 1
+            stock_count.save()
             return HttpResponseRedirect('/volunteer/volunteer-dashboard/')
         else:
             messages.error(request, "error when adding the donation record")
@@ -181,15 +227,31 @@ def generate_donation_report(request):
 
     print(donation_array, the_volunteer.blood_drive)
     # print(donation_array[0].donor.user.first_name)
+    current_date = datetime.datetime.now().strftime("%d/%m/%Y")
 
-    report_data = generate_my_report('donation', DONATION_TEMPLATE, donation_array, the_volunteer, reports_count)
+    payload = {
+        "station_name": f"{the_volunteer.blood_drive.name}",
+        "station_id": f"{the_volunteer.blood_drive.drive_id}",
+        "volunteer_id": f"{the_volunteer.volunteer_id}",
+        "document_number": f"000{reports_count}",
+        "document_date": f"{current_date}",
+
+        "donors": donation_array
+    }
+    report_data = generate_my_report('donation', DONATION_TEMPLATE, payload)
     #
     if report_data != 'error':
         generated_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        time.sleep(3)
+        doc_path = generate_doc_path(report_data['document']['id'], report_data['document']['meta'], 'donation-reports')
+
+        # save the new report to the database
         new_report = DonationReport(the_volunteer.volunteer_id, report_data['document']['id'],
                                     the_volunteer.blood_drive.drive_id,
-                                    report_data['document']['checksum'], "", generated_date)
+                                    report_data['document']['checksum'], doc_path, generated_date)
         new_report.save()
+        messages.success(request, "Donation report generated successfully and saved to files")
         return HttpResponseRedirect('/volunteer/donation-reports')
     else:
         messages.error(request, "There was an error generating a new report")
@@ -216,15 +278,30 @@ def generate_donor_report(request):
 
     print(donors_array, the_volunteer.blood_drive)
     # print(donation_array[0].donor.user.first_name)
+    current_date = datetime.datetime.now().strftime("%d/%m/%Y")
+    payload = {
+        "station_name": f"{the_volunteer.blood_drive.name}",
+        "station_id": f"{the_volunteer.blood_drive.drive_id}",
+        "volunteer_id": f"{the_volunteer.volunteer_id}",
+        "document_number": f"000{reports_count}",
+        "document_date": f"{current_date}",
 
-    report_data = generate_my_report('donor', DONOR_TEMPLATE, donors_array, the_volunteer, reports_count)
+        "donors": donors_array
+    }
+    report_data = generate_my_report('donor', DONOR_TEMPLATE, payload)
     #
     if report_data != 'error':
         generated_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        time.sleep(3)
+        doc_path = generate_doc_path(report_data['document']['id'], report_data['document']['meta'], 'donor-reports')
+
+        # save the new report to the database
         new_report = DonorReport(the_volunteer.volunteer_id, report_data['document']['id'],
                                  the_volunteer.blood_drive.drive_id,
-                                 report_data['document']['checksum'], "", generated_date)
+                                 report_data['document']['checksum'], doc_path, generated_date)
         new_report.save()
+        messages.success(request, "Donor report generated successfully and saved to files")
         return HttpResponseRedirect('/volunteer/donor-reports')
     else:
         messages.error(request, "There was an error generating a new report")
@@ -289,7 +366,9 @@ def generate_station_report(request):
 
         for activity in activities:
             print(activity.created_date)
-            current_time = datetime.datetime.strptime(str(activity.created_date), '%Y-%m-%d %H:%M:%S.%f%z')
+            time_string = str(activity.created_date)
+            # Stripping the offset from the date
+            current_time = datetime.datetime.strptime(time_string[:19], '%Y-%m-%d %H:%M:%S')
 
             hour = str(current_time.time())[0:2]
 
@@ -337,14 +416,25 @@ def generate_station_report(request):
         print(response)
         if response != 'error':
             report_id = response['document']['id']
-            time.sleep(5)
+            time.sleep(3)
+            doc_path = generate_doc_path(report_id, response['document']['meta'], 'station-reports')
+            print(f"The doc path for later use: {doc_path}")
+
+            generated_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            new_report = StationReport(the_volunteer.volunteer_id, report_id, station_id, f"StationReport-{station_id}",
+                                       doc_path, generated_date)
+            new_report.save()
+
             report_url = get_document_url(report_id)
             return HttpResponseRedirect(report_url)
         else:
             print("Error in generating report")
+            messages.error(request, "Error in generating report")
             return HttpResponseRedirect('/volunteer/volunteer-dashboard')
     else:
         print('Creating station report is not available at this time')
+        messages.error(request, 'Creating station report is not available at this time')
         return HttpResponseRedirect('/volunteer/volunteer-dashboard')
 
 
@@ -354,4 +444,15 @@ def download_report(request, pk):
     if report_url != 'error':
         return HttpResponseRedirect(report_url)
     else:
+        messages.error(request, "Error in downloading report")
         return HttpResponseRedirect('/volunteer/volunteer-dashboard')
+
+
+class UploadReportView(TemplateView):
+    template_name = 'volunteer/upload_reports.html'
+
+
+def upload_report(request):
+    print(request.FILES)
+    messages.success(request, "Report uploaded successfully")
+    return HttpResponseRedirect('/volunteer/volunteer-dashboard')
