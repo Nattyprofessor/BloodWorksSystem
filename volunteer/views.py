@@ -15,7 +15,7 @@ from donor.functions import notify_admin_about_new_donor
 from .models import *
 from blood import models as b_models
 from appointments import models as a_models, functions
-from donor import models as d_models, forms
+from donor import models as d_models, forms as d_forms
 from .function import *
 from .forms import *
 
@@ -46,8 +46,8 @@ def volunteer_dashboard_view(request):
 
 def search_donor(request):
     # Check if the request is a post request.
-    healthform = forms.DonorHealthForm()
-    search_form = forms.SearchDonor()
+    healthform = d_forms.DonorHealthForm()
+    search_form = d_forms.SearchDonor()
 
     if request.method == 'POST':
         print('<>')
@@ -66,7 +66,7 @@ def search_donor(request):
                               {'searchform': search_form, 'donor': donor, 'healthform': healthform})
 
         if 'healthbtn' in request.POST:
-            healthform = forms.DonorHealthForm(request.POST)
+            healthform = d_forms.DonorHealthForm(request.POST)
 
             print(healthform.errors)
 
@@ -91,11 +91,11 @@ def search_donor(request):
 def pre_exam_view(request):
     the_volunteer = a_models.VolunteerRegistration.objects.get(user=request.user)
     # Check if the request is a post request.
-    exam_form = forms.PreExamForm()
-    search_form = forms.SearchDonor()
+    exam_form = d_forms.PreExamForm()
+    search_form = d_forms.SearchDonor()
 
     if request.method == 'POST':
-        exam_form = forms.PreExamForm(request.POST)
+        exam_form = d_forms.PreExamForm(request.POST)
         if exam_form.is_valid():
             form = exam_form.save(commit=False)
             form.pre_exam_id = generate_exam_id()
@@ -148,13 +148,13 @@ def pre_exam_view(request):
 
 
 def register_donor(request):
-    userForm = forms.DonorUserForm()
-    donorForm = forms.DonorForm()
+    userForm = d_forms.DonorUserForm()
+    donorForm = d_forms.DonorForm()
     mydict = {'userForm': userForm, 'donorForm': donorForm}
     if request.method == 'POST':
         print('<>')
-        userForm = forms.DonorUserForm(request.POST)
-        donorForm = forms.DonorForm(request.POST, request.FILES)
+        userForm = d_forms.DonorUserForm(request.POST)
+        donorForm = d_forms.DonorForm(request.POST, request.FILES)
         if userForm.is_valid() and donorForm.is_valid():
             print('<>')
             user = userForm.save(commit=False)
@@ -186,9 +186,9 @@ def donate_blood_view(request):
     the_volunteer = a_models.VolunteerRegistration.objects.get(user=request.user)
 
     station_id = the_volunteer.blood_drive.drive_id
-    donationform = forms.DonationForm()
+    donationform = d_forms.DonationForm()
     if request.method == 'POST':
-        donationform = forms.DonationForm(request.POST)
+        donationform = d_forms.DonationForm(request.POST)
         if donationform.is_valid():
             blood_donate = donationform.save(commit=False)
 
