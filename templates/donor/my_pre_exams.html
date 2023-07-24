@@ -1,0 +1,29 @@
+{% extends 'donor/donorbase.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Pre-Exams</title>
+</head>
+<body>
+    <h1>My Pre Exams</h1>
+                {% include "appointments/message.html" %}
+
+    <div class="container-fluid row row-cols-3">
+    {% for report in reports %}
+        <div class="card col px-2 py-2 my-2 mx-2">
+            <h5 class="card-title">{{ report.pre_exam_id }}</h5>
+            <p>Haemoglobin_gDL: {{ report.haemoglobin_gDL }}</p>
+            <p>Temperature_C: {{ report.temperature_C }}</p>
+            <p>Blood_pressure: {{ report.blood_pressure }}</p>
+            <p>Pulse_rate_BPM: {{ report.pulse_rate_BPM }}</p>
+            <br>
+            <p>Taken On: {{ report.created_date }}</p>
+
+
+        </div>
+    {% endfor %}
+        </div>
+</body>
+</html>
+{% endblock %}

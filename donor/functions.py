@@ -47,7 +47,7 @@ def generate_id_document(name, donor, code):
                 "qr_code": {"code": f"{donor.donor_id}", "name": f"#{donor.user.username}"},
                 "donor": {
                     "photo": f"{donor.profile_pic.url}",
-                    "name": f"{name}", "email": f"{donor.email}", "blood_group": f"{donor.bloodgroup}"}
+                    "name": f"{name}", "email": f"{donor.email}","phone": f"{donor.mobile}" ,"blood_group": f"{donor.bloodgroup}"}
             },
             "meta": {
                 "clientId": "ABC1234-DE",

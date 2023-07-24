@@ -1,3 +1,4 @@
+import datetime
 import time
 
 from django.shortcuts import render, redirect, reverse
@@ -13,12 +14,12 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from donor import models as dmodels, functions
 from patient import models as pmodels
-from donor import forms as dforms
+from donor import forms as dforms, functions as dfunctions
 from patient import forms as pforms
 from appointments import models as amodels
 from appointments import forms as aforms
 from volunteer import function as vfunctions, models as vmodels
-
+from .functions import *
 
 def home_view(request):
     x = models.Stock.objects.all()
@@ -222,6 +223,8 @@ def assign_volunteer_view(request, id):
         volunteer.save(update_fields=['blood_drive'])
         messages.success(request, "Volunteer has been assigned")
 
+        dfunctions.notify_volunteer_of_assignment(volunteer)
+
         # Create an account for the volunteer
         volunteer.user = vfunctions.create_volunteer_account(volunteer)
         volunteer.save(update_fields=['user'])
@@ -395,3 +398,46 @@ def view_all_reports(request):
     donor_reports = vmodels.DonorReport.objects.all()
     donation_reports = vmodels.DonationReport.objects.all()
     return render(request, 'blood/admin_view_reports.html', {'donor_reports': donor_reports, 'donation_reports': donation_reports})
+
+
+def create_campaign_view(request):
+    campaign_form = forms.CampaignForm()
+
+    if request.method == 'POST':
+        campaign_form = forms.CampaignForm(request.POST, request.FILES)
+        if campaign_form.is_valid():
+            selected_counties = campaign_form.cleaned_data['county']
+            print(f'Selected Counties: {selected_counties}')
+
+            donors = []
+            for county in selected_counties:
+                donor = dmodels.Donor.objects.filter(county=county)
+                if len(donor) > 0:
+                    donors.extend(donor)
+
+            print("Donors are" ,donors)
+            if len(donors) >= 1:
+                emails = []
+                for donor in donors:
+                    emails.append(donor.email)
+
+                    # Add campaign notification to database
+                    current_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    notification = dmodels.Notifications(donor.donor_id,request.user,campaign_form.data['subject'], campaign_form.data['message'],"",current_date)
+                    notification.save()
+
+                print(emails)
+                if len(emails) > 0:
+                    string_email = ','.join(emails)
+                    response = send_email_campaign(string_email,campaign_form)
+                    if response != 'error':
+                        messages.success(request, "Campaign Created Successfully")
+                        return render(request, 'blood/create_campaign.html', {'campaign_form': campaign_form})
+                    else:
+                        messages.success(request, "Error in creating the campaign")
+                        return render(request, 'blood/create_campaign.html', {'campaign_form': campaign_form})
+            else:
+                print("No Donors Found")
+                return render(request, 'blood/create_campaign.html', {'campaign_form': campaign_form})
+
+    return render(request, 'blood/create_campaign.html', {'campaign_form': campaign_form})

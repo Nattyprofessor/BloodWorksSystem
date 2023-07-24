@@ -1,0 +1,22 @@
+{% extends 'donor/donorbase.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Donation Statements</title>
+</head>
+<body>
+    <h1>Donation Statements</h1>
+                {% include "appointments/message.html" %}
+
+    <div class="container-fluid row row-cols-3">
+    {% for report in reports %}
+        <div class="card col px-3 py-3 my-2 mx-2">
+
+            <a href="/{{ report  }}">View</a>
+        </div>
+    {% endfor %}
+        </div>
+</body>
+</html>
+{% endblock %}

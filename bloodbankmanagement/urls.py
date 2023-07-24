@@ -61,5 +61,6 @@ urlpatterns = [
     path('update-reject-status/<int:pk>', views.update_reject_status_view, name='update-reject-status'),
     path('view-all-reports', views.view_all_reports, name='view-all-reports'),
     path('get-station-report', views.get_station_report, name='get-station-report'),
+    path('create-campaign', views.create_campaign_view, name='create-campaign'),
 
 ]

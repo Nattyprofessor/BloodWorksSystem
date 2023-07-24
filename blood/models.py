@@ -37,7 +37,7 @@ counties = {
     ("Meru", "Meru"),
     ("Migori", "Migori"),
     ("Mombasa", "Mombasa"),
-    ("Murang'a", "Murang"),
+    ("Murang'a", "Murang'a"),
     ("Nairobi", "Nairobi"),
     ("Nakuru", "Nakuru"),
     ("Nandi", "Nandi"),

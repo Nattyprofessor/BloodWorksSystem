@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 from donor.functions import notify_admin_about_new_donor
@@ -23,7 +24,7 @@ from .forms import *
 DONATION_TEMPLATE = '77CCC284-F85A-4162-9AC6-F1CCA53F122F'
 DONOR_TEMPLATE = 'B55206FC-3781-4896-A20F-CBABEAB94F40'
 EXAM_TEMPLATE = '4BC03F18-668A-456B-B924-04CC41FE8077'
-
+COLLECTED_DONATION_TEMPLATE = '43281C85-8E11-4EC2-B5BA-CBF1C7443418'
 
 # Create your views here.
 @login_required(login_url='volunteerlogin')
@@ -112,7 +113,7 @@ def pre_exam_view(request):
                 "age": f"N/A",
                 "blood_group": f"{donor.bloodgroup}",
                 "station_name": f"{the_volunteer.blood_drive.name}",
-                "document_date": f"{current_date}",
+                "donation_date": f"{current_date}",
 
                 "exam": {
                     "volunteer_name": f"{the_volunteer.name}",
@@ -192,14 +193,41 @@ def donate_blood_view(request):
         if donationform.is_valid():
             blood_donate = donationform.save(commit=False)
 
-            current_date = datetime.datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
+            current_date = datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
             blood_donate.current_date = current_date
             blood_donate.donation_id = f"{station_id}-D-{random.randrange(0, 100)}-{str(current_date)}"
             blood_donate.save()
 
+            print('XXXXX',blood_donate.donation_type)
+
             stock_count = b_models.Stock.objects.get(bloodgroup=blood_donate.blood_group)
             stock_count.unit += 1
             stock_count.save()
+
+            #Generate a donation document for the user
+            payload = {
+                  "name": blood_donate.donor.get_name,
+                  "age": blood_donate.age,
+                  "blood_group": blood_donate.blood_group,
+                  "units": blood_donate.unit,
+                  "type": str(blood_donate.donation_type),
+                  "donation_date": current_date,
+                  "station_name": the_volunteer.blood_drive.name
+            }
+            response = generate_donor_statement(blood_donate.donor.donor_id,COLLECTED_DONATION_TEMPLATE,payload)
+            if response != 'error':
+                time.sleep(3)
+                doc_path = generate_doc_path(response['document']['id'], response['document']['meta'],
+                                             'donor-statements')
+
+                donor_notification = d_models.Notifications(donor=blood_donate.donor,
+                                                            sender=request.user,
+                                                            title="Blood Donation",
+                                                            message="Thank you for donating your blood",
+                                                            attachment=doc_path,
+                                                            created_date=timezone.datetime.now())
+                donor_notification.save()
+            messages.success(request, "New donation record saved to database")
             return HttpResponseRedirect('/volunteer/volunteer-dashboard/')
         else:
             messages.error(request, "error when adding the donation record")

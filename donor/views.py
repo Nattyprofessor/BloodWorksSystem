@@ -1,10 +1,13 @@
 import datetime
+import os
 
 from django.shortcuts import render, redirect, reverse
 from . import forms, models
 from django.db.models import Sum, Q
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
+from django.contrib import messages
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 from datetime import date, timedelta
@@ -57,9 +60,11 @@ def donor_dashboard_view(request):
     print(datetime.now().hour, current_time)
 
     id_url = 'none'
+    id_url = get_document_url(donor, donor.donor_card_code)
+
     if datetime.now().hour == current_time + 1:
         print('Generate new url')
-        # id_url = get_document_url(donor, donor.donor_card_code)
+        id_url = get_document_url(donor, donor.donor_card_code)
     # returns the most recent donation done by the user
     recent_date = find_most_recent_datetime(donation_history)
     print("The recent date is: ", recent_date)
@@ -87,7 +92,52 @@ def request_history_view(request):
     blood_request = bmodels.BloodRequest.objects.all().filter(request_by_donor=donor)
     return render(request, 'donor/request_history.html', {'blood_request': blood_request})
 
+
 # Donor profile has been shifted to donor dashboard
 # def donor_profile_view(request):
 #     full_name = user.first_name + " " + user.last_name
 #     return render(request, 'donor/donor_profile.html', context={"donor": donor, "user": user, "id_url": id_url})
+def my_statements_view(request):
+    donor = models.Donor.objects.get(user_id=request.user.id)
+
+
+    directory = 'static/reports/donor-statements'
+    search_string = donor.donor_id
+    def search_files_with_string(directory, search_string):
+        found_files = []
+        for root, dirs, files in os.walk(directory):
+            for file in files:
+                if search_string in file:
+                    found_files.append(os.path.join(root, file))
+        return found_files
+
+    statements = search_files_with_string(directory, search_string)
+    if statements:
+        return render(request, 'donor/donation_statements.html', {'reports': statements})
+    messages.error(request,"You have no donation statements yet.")
+    return render(request, 'donor/donation_statements.html')
+
+
+def my_notifications_view(request):
+    print(request.user.id)
+    donor = models.Donor.objects.get(user_id=request.user.id)
+    x = models.Notifications.objects.all().values()
+    print(x)
+    my_notifications = models.Notifications.objects.all().filter(donor=donor.donor_id)
+    for index, notification in enumerate(my_notifications):
+        group = notification.sender.groups.values_list('name', flat=True).first()
+        print(group)
+        my_notifications[index].group = group
+
+    count = len(my_notifications)
+    return render(request, 'donor/donor_notifications.html', {'notifications': my_notifications, 'count': count})
+
+
+def my_pre_exams_view(request):
+    donor = models.Donor.objects.get(user_id=request.user.id)
+    donor_exams = models.PreExamInfo.objects.all().filter(donor_id  =donor.donor_id)
+
+    if len(donor_exams) != 0:
+        return render(request, 'donor/my_pre_exams.html', {'reports': donor_exams})
+    messages.success(request, "You have no pre-exams yet.")
+    return render(request, 'donor/my_pre_exams.html')
