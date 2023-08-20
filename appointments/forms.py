@@ -15,6 +15,12 @@ class RequestForm(forms.ModelForm):
         fields = ['name', 'email', 'phone', 'location']
 
 
+class VolunteerForm(forms.ModelForm):
+    class Meta:
+        model = VolunteerRegistration
+        fields = ['name', 'email', 'phone', 'location', 'reason']
+
+
 class VolunteerRegistrationForm(forms.ModelForm):
     class Meta:
         model = VolunteerRegistration

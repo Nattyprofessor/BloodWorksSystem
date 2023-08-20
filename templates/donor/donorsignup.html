@@ -29,16 +29,17 @@
 					<div class="card shadow-lg my-5">
 						<div class="card-body p-5">
 							<h1 class="fs-4 card-title fw-bold mb-4">Donor Self-Registration</h1>
+                            {% include "appointments/message.html" %}
 							<form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="mb-2 text-muted">Profile Picture</label>
+                                    <label class="mb-2 text-muted">Profile Picture<span class="text-danger"> *</span></label>
                                     <div class="input-group">
                                         {% render_field donorForm.profile_pic|attr:'required:true'  class="form-control"  %}
                                     </div>
                                 </div>
 								<div class="mb-3">
-									<label class="mb-2 text-muted" for="f_name">First Name</label>
+									<label class="mb-2 text-muted" for="f_name">First Name<span class="text-danger"> *</span></label>
                                     <div class="input-group" id="f_name">
                                         {% render_field userForm.first_name|attr:'required:true'  class="form-control" name="name" value="" type="text" id="name"  %}
                                     </div>
@@ -47,7 +48,7 @@
 									</div>
 								</div>
                                 <div class="mb-3">
-									<label class="mb-2 text-muted" for="l_name">Last Name</label>
+									<label class="mb-2 text-muted" for="l_name">Last Name<span class="text-danger"> *</span></label>
                                     <div class="input-group" id="l_name">
                                         {% render_field userForm.last_name|attr:'required:true'  class="form-control" name="name" value="" type="text" id="name"  %}
                                     </div>
@@ -56,7 +57,7 @@
 									</div>
 								</div>
                                 <div class="mb-3">
-									<label class="mb-2 text-muted" for="username">UserName</label>
+									<label class="mb-2 text-muted" for="username">UserName<span class="text-danger"> *</span></label>
                                     <div class="input-group" id="username">
                                         {% render_field userForm.username|attr:'required:true'  class="form-control" name="username" type="text"  %}
                                     </div>
@@ -64,23 +65,8 @@
 										Name is required
 									</div>
 								</div>
-
-								<div class="mb-3">
-									<label class="mb-2 text-muted">E-Mail Address</label>
-                                        {% render_field donorForm.email|attr:'required:true'  class="form-control" name="email" placeholder="E-mail" type="email"  %}
-									<div class="invalid-feedback">
-										Email is invalid
-									</div>
-								</div>
                                 <div class="mb-3">
-                                    <label class="mb-2 text-muted">Mobile Number</label>
-                                    <div class="input-group">
-                                        {% render_field donorForm.mobile|attr:'required:true'  class="form-control" type="number" %}
-                                    </div>
-                                </div>
-
-								<div class="mb-3">
-									<label class="mb-2 text-muted" for="password">Password</label>
+									<label class="mb-2 text-muted" for="password">Password<span class="text-danger"> *</span></label>
                                     <div class="input-group" id="password">
                                         {% render_field userForm.password|attr:'required:true'  class="form-control" type="password" name="password"  %}
                                     </div>
@@ -89,8 +75,22 @@
 							    	</div>
 								</div>
 
+								<div class="mb-3">
+									<label class="mb-2 text-muted">E-Mail Address<span class="text-danger"> *</span></label>
+                                        {% render_field donorForm.email|attr:'required:true'  class="form-control" name="email" placeholder="E-mail" type="email"  %}
+									<div class="invalid-feedback">
+										Email is invalid
+									</div>
+								</div>
                                 <div class="mb-3">
-                                    <label class="mb-2 text-muted">Blood Group</label>
+                                    <label class="mb-2 text-muted">Mobile Number<span class="text-danger"> *</span></label>
+                                    <div class="input-group">
+                                        {% render_field donorForm.mobile|attr:'required:true'  class="form-control" type="number" %}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 visually-hidden">
+                                    <label class="mb-2 text-muted">Blood Group<span class="text-danger"> *</span></label>
                                     <select class="form-select" name="bloodgroup" aria-label="Default select example">
                                           <option disabled="disabled" selected>Choose a blood group</option>
                                             <option value="O+">O+</option>
@@ -103,9 +103,14 @@
                                             <option value="AB-">AB-</option>
                                     </select>
                                 </div>
-
                                 <div class="mb-3">
-                                    <label class="mb-2 text-muted">Address</label>
+                                    <label class="mb-2 text-muted">County<span class="text-danger"> *</span></label>
+                                    <div class="input-group">
+                                        {% render_field donorForm.county|attr:'required:true'  class="form-control"  %}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted">Address<span class="text-danger"> *</span></label>
                                     <div class="input-group">
                                         {% render_field donorForm.address|attr:'required:true'  class="form-control"  %}
                                     </div>

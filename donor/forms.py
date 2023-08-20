@@ -12,10 +12,16 @@ class DonorUserForm(forms.ModelForm):
         }
 
 
+class DonorProfileForm(forms.ModelForm):
+    class Meta:
+        model = models.Donor
+        fields = ['address', 'county', 'mobile', 'email', 'profile_pic']
+
+
 class DonorForm(forms.ModelForm):
     class Meta:
         model = models.Donor
-        fields = ['status', 'bloodgroup', 'address','county', 'mobile', 'email', 'profile_pic', 'created_date']
+        fields = ['status', 'bloodgroup', 'address', 'county', 'mobile', 'email', 'profile_pic', 'created_date']
 
 
 class SearchDonor(forms.Form):

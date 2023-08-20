@@ -4,7 +4,7 @@ from django.contrib import messages
 
 from blood.models import BloodDrives
 from .models import Appointment
-from .forms import RequestForm, VolunteerRegistrationForm, HostedBloodDrivesForm
+from .forms import RequestForm,VolunteerForm, VolunteerRegistrationForm, HostedBloodDrivesForm
 from .functions import handle_uploaded_file
 
 # Create your views here.
@@ -39,10 +39,11 @@ def show_drives(request):
 
 def volunteer_registration_view(request):
     if request.method == 'POST':
-        form = VolunteerRegistrationForm(request.POST)
+        form = VolunteerForm(request.POST)
+
         if form.is_valid():
             form.save()
-            messages.success(request, 'Thank you for registering')
+            messages.success(request, 'Thank you for registering. An email will be sent to you with more details')
             return render(request, 'appointments/volunteer.html',
                           {'form': VolunteerRegistrationForm(request.GET)})
         else:

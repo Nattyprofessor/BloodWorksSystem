@@ -24,22 +24,26 @@ def donor_signup_view(request):
     mydict = {'userForm': userForm, 'donorForm': donorForm}
     if request.method == 'POST':
         userForm = forms.DonorUserForm(request.POST)
-        donorForm = forms.DonorForm(request.POST, request.FILES)
+        donorForm = forms.DonorProfileForm(request.POST, request.FILES)
         if userForm.is_valid() and donorForm.is_valid():
             user = userForm.save()
             user.set_password(user.password)
             user.save()
             donor = donorForm.save(commit=False)
             donor.user = user
-            donor.bloodgroup = donorForm.cleaned_data['bloodgroup']
+            #donor.bloodgroup = donorForm.cleaned_data['bloodgroup']
             donor.save()
             my_donor_group = Group.objects.get_or_create(name='DONOR')
             my_donor_group[0].user_set.add(user)
 
             user_name = user.first_name + " " + user.last_name
-            notify_admin_about_new_donor(donor, user_name)
+            # notify_admin_about_new_donor(donor, user_name)
+            return HttpResponseRedirect('donorlogin')
+        else:
+            messages.error(request, 'Invalid form submission.')
+            messages.error(request, userForm.errors)
+            messages.error(request, donorForm.errors)
 
-        return HttpResponseRedirect('donorlogin')
     return render(request, 'donor/donorsignup.html', context=mydict)
 
 
