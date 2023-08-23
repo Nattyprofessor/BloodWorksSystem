@@ -302,7 +302,7 @@ def admin_request_history_view(request):
 @login_required(login_url='adminlogin')
 def admin_show_appointments_view(request):
     print(request.POST)
-    context = {'data': amodels.Appointment.objects.all(), 'form': aforms.AppointmentForm()}
+    context = {'data': amodels.Appointment.objects.all(),'appointments': amodels.Requests.objects.all(), 'form': aforms.AppointmentForm()}
     return render(request, 'blood/admin-appointment.html', context)
 
 

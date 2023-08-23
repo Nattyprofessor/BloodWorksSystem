@@ -141,7 +141,7 @@ def pre_exam_view(request):
                 url = report_data['doc_path']
 
                 if url != 'error':
-                    return HttpResponseRedirect(url)
+                    return HttpResponseRedirect(f"/{url}")
 
                 else:
                     messages.error(request, "Some errors occured while generating the report")

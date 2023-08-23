@@ -59,7 +59,32 @@
 
 <div class="container fluid">
     <div class="row">
-        <h3 class="text-center">Show All Appointments</h3>
+        <h3 class="text-center">All Appointments</h3>
+        <table class="table table-light table-hover table-bordered table-striped">
+        <thead class="bg-info">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+
+            <th scope="col">Phone</th>
+            <th scope="col">Location</th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for x in appointments %}
+        <tr>
+            <td> {{x.name}}</td>
+            <td>{{x.email}}</td>
+            <td>{{x.phone}}</td>
+            <td>{{x.location}}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+
+    </table>
     </div>
 
 </div>
