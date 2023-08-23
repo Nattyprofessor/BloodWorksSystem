@@ -1,0 +1,82 @@
+    <head>
+    <style>
+        @import url("https://pdfmonkey-resources.s3.eu-west-3.amazonaws.com/css/tailwind-light.min.css");
+        //@import url("https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css");
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        .sticker {
+            // This is a debug background, remove it to get transparent stickers.
+            background: #fafafa;
+
+            float: left;
+            height: 35mm;
+            margin: 0 1.25mm 1.25mm 0;
+            padding: 1mm;
+            page-break-inside: avoid;
+            text-align: center;
+            width: 35mm;
+
+            &:nth-child(5n) {
+                margin-right: 0;
+            }
+
+            &:nth-child(35n),
+            &:nth-child(35n - 1),
+            &:nth-child(35n - 2),
+            &:nth-child(35n - 3),
+            &:nth-child(35n - 4) {
+                margin-bottom: 0;
+            }
+        }
+
+
+        .qrcode {
+            margin: 0 auto 1mm;
+            width: 350px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="columns-2">
+        <img src="https://raw.githubusercontent.com/Nattyprofessor/BloodWorksSystem/6a2cd3b47de82ee4d30a8f6bb75dc9e7e8271eb5/static/image/logo.png" height="80" width="65">
+        <h1 class="text-3xl font-bold mb-4">Blood Works: ID Card</h1>
+    </div>
+    <div class="flex justify-around mb-4">
+        <div>
+            <img src="{{ donor.photo }}" height="300" width="200" alt="avatar">
+            <p class="text-2xl font-semibold">{{ donor.name }}</p>
+        </div>
+        <div>
+            <h2 class="text-2xl font-bold">Contact:</h2>
+            <h3 class="text-md font-semibold">Phone: {{ donor.phone }}</h3>
+            <h3 class="text-md font-semibold">Email: {{ donor.email }}</h3>
+            <h3 class="text-md font-semibold">Blood Group: {{ donor.blood_group }}</h3>
+
+            <div class="sticker">
+                <div class="product">{{qr_code.name}}</div>
+                <div class="qrcode" data-text="{{qr_code.code}}"></div>
+            </div>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+
+        <script>
+            document
+                .querySelectorAll('.qrcode')
+                .forEach((container) => {
+                    new QRCode(container, {
+                        text: container.getAttribute('data-text'),
+                        width: 150,
+                        height: 150,
+                        colorDark: "#000000",
+                        colorLight: "transparent"
+                    });
+                });
+        </script>
+</body>

@@ -81,7 +81,18 @@
                                             Password is required
                                         </div>
                                     </div>
-
+                                     <div class="mb-3">
+                                    <label class="mb-2 text-muted">County<span class="text-danger"> *</span></label>
+                                    <div class="input-group">
+                                        {% render_field donorForm.county|attr:'required:true'  class="form-control"  %}
+                                    </div>
+                                </div>
+                                <div class="mb-3 visually-hidden">
+                                    <label class="mb-2 text-muted">Created Date</label>
+                                    <div class="input-group">
+                                        {% render_field donorForm.created_date|attr:'required:true' class="form-control"  %}
+                                    </div>
+                                </div>
                                     <div class="col-md-6 col-sm-12 mb-3">
                                         <label class="mb-2 text-muted">Address</label>
                                         <div class="input-group">

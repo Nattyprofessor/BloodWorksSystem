@@ -1,6 +1,7 @@
 import datetime
 import time
-
+from urllib.parse import quote
+import re
 from django.shortcuts import render, redirect, reverse
 from . import forms, models
 from django.db.models import Sum, Q, Count
@@ -177,9 +178,17 @@ def update_donor_view(request, id):
         donor.save(update_fields=['status', 'bloodgroup'])
         messages.success(request, "Donor status has been updated")
 
+        print()
         if donor.status == "Approved":
-            if str(type(
-                    donor.donor_card_code)) == "<class 'NoneType'>":  # means that the no card has ever been generated for the donor
+            code = f'{donor.address} - {donor.user_id}'
+            response = functions.generate_id_document(donor.get_name, donor)
+            if response == "success":
+                messages.success(request, "Donor ID Card has been generated and saved.")
+            else:
+                messages.error(request, "There was an error in generating the donor's card id")
+                messages.error(request, "Please login as the root admin and perform the task manually")
+            """
+            if str(type(donor.donor_card_code)) == "<class 'NoneType'>":  # means that the no card has ever been generated for the donor
                 code = f'{donor.address} - {donor.user_id}'
                 card_id = functions.generate_id_document(donor.get_name, donor, code)
                 if card_id != "error":
@@ -191,7 +200,7 @@ def update_donor_view(request, id):
                     messages.error(request, "Please login as the root admin and perform the task manually")
             else:
                 print("the donor already has a donor card")
-
+            """
     return render(request, 'blood/update_donor.html', context=mydict)
 
 
@@ -223,7 +232,7 @@ def assign_volunteer_view(request, id):
         volunteer.save(update_fields=['blood_drive'])
         messages.success(request, "Volunteer has been assigned")
 
-        dfunctions.notify_volunteer_of_assignment(volunteer)
+        #dfunctions.notify_volunteer_of_assignment(volunteer)
 
         # Create an account for the volunteer
         volunteer.user = vfunctions.create_volunteer_account(volunteer)
@@ -300,6 +309,16 @@ def admin_show_appointments_view(request):
 @login_required(login_url='adminlogin')
 def admin_donation_view(request):
     donations = dmodels.BloodDonate.objects.all()
+
+    d_list = list(donations.values())
+    print(d_list)
+    for donation in d_list:
+        donation['donation_id'] = cleaned_string = re.sub(r'[^a-zA-Z0-9\s]', '', donation['donation_id'])
+        # Find the positions of special characters
+        special_chars_positions = [match.start() for match in re.finditer(r'[^a-zA-Z0-9\s]', donation['donation_id'])]
+        print(type(special_chars_positions))
+        donation['positions'] = str(special_chars_positions)
+
     return render(request, 'blood/admin_donation.html', {'donations': donations})
 
 
@@ -307,9 +326,9 @@ def admin_donation_view(request):
 def update_approve_status_view(request, pk):
     req = models.BloodRequest.objects.get(id=pk)
     message = None
-    bloodgroup = req.bloodgroup
+    blood_group = req.blood_group
     unit = req.unit
-    stock = models.Stock.objects.get(bloodgroup=bloodgroup)
+    stock = models.Stock.objects.get(bloodgroup=blood_group)
     if stock.unit > unit:
         stock.unit = stock.unit - unit
         stock.save()
@@ -333,10 +352,19 @@ def update_reject_status_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-def approve_donation_view(request, pk):
-    donation = dmodels.BloodDonate.objects.get(id=pk)
+def approve_donation_view(request,pk,positions):
+    cleaned_string = ""
+    for pos in positions:
+        cleaned_string = cleaned_string[:pos] + pk[pos] + cleaned_string[pos:]
+
+    print("Original String:", pk)
+    print("Cleaned and Restored String:", cleaned_string)
+
+    donation = dmodels.BloodDonate.objects.get(donation_id=pk)
     donation_blood_group = donation.bloodgroup
     donation_blood_unit = donation.unit
+
+
 
     stock = models.Stock.objects.get(bloodgroup=donation_blood_group)
     stock.unit = stock.unit + donation_blood_unit
@@ -349,7 +377,7 @@ def approve_donation_view(request, pk):
 
 @login_required(login_url='adminlogin')
 def reject_donation_view(request, pk):
-    donation = dmodels.BloodDonate.objects.get(id=pk)
+    donation = dmodels.BloodDonate.objects.get(donation_id=pk)
     donation.status = 'Rejected'
     donation.save()
     return HttpResponseRedirect('/admin-donation')

@@ -15,16 +15,17 @@ from django.views.generic import TemplateView
 from donor.functions import notify_admin_about_new_donor
 from .models import *
 from blood import models as b_models
+from donor import functions as d_functions
 from appointments import models as a_models, functions
 from donor import models as d_models, forms as d_forms
 from .function import *
 from .forms import *
 
 # ####Constants for pdf template Ids
-DONATION_TEMPLATE = '77CCC284-F85A-4162-9AC6-F1CCA53F122F'
-DONOR_TEMPLATE = 'B55206FC-3781-4896-A20F-CBABEAB94F40'
-EXAM_TEMPLATE = '4BC03F18-668A-456B-B924-04CC41FE8077'
-COLLECTED_DONATION_TEMPLATE = '43281C85-8E11-4EC2-B5BA-CBF1C7443418'
+DONATION_TEMPLATE = 'donation_template.html'
+DONOR_TEMPLATE = 'donors_template.html'
+EXAM_TEMPLATE = 'exam_template.html'
+COLLECTED_DONATION_TEMPLATE = "donor_approval_template.html"
 
 # Create your views here.
 @login_required(login_url='volunteerlogin')
@@ -124,11 +125,20 @@ def pre_exam_view(request):
                     "pulse_rate_BPM": f"{exam_form.cleaned_data['pulse_rate_BPM']}",
                 }
             }
-            report_data = generate_my_report('exam', EXAM_TEMPLATE, payload)
+            exam =  {
+                    "volunteer_name": f"{the_volunteer.name}",
+                    "id": f"{form.pre_exam_id}",
+                    "haemoglobin_gDL": f"{exam_form.cleaned_data['haemoglobin_gDL']}",
+                    "temperature_C": f"{exam_form.cleaned_data['temperature_C']}",
+                    "blood_pressure": f"{exam_form.cleaned_data['blood_pressure']}",
+                    "pulse_rate_BPM": f"{exam_form.cleaned_data['pulse_rate_BPM']}",
+                }
+            report_data = generate_exam_report('exam', EXAM_TEMPLATE, payload, exam)
+            #report_data = generate_my_report('exam', EXAM_TEMPLATE, payload)
 
-            if report_data != 'error':
-                time.sleep(3)
-                url = get_document_url(report_data['document']['id'])
+            if report_data['status'] == 'success':
+
+                url = report_data['doc_path']
 
                 if url != 'error':
                     return HttpResponseRedirect(url)
@@ -172,7 +182,13 @@ def register_donor(request):
             my_donor_group[0].user_set.add(user)
 
             user_name = user.first_name + " " + user.last_name
-            notify_admin_about_new_donor(donor, user_name)  # remove when uploading to server
+            #notify_admin_about_new_donor(donor, user_name)  # remove when uploading to server
+            response = d_functions.generate_id_document(user_name, donor)
+            if response == "success":
+                messages.success(request, "Donor ID Card has been generated and saved.")
+            else:
+                messages.error(request, "There was an error in generating the donor's card id")
+                messages.error(request, "Please login as the root admin and perform the task manually")
             return HttpResponseRedirect('/volunteer/update-donor')
         else:
             messages.error(request, 'There was an error in registering the donor')
@@ -215,16 +231,13 @@ def donate_blood_view(request):
                   "station_name": the_volunteer.blood_drive.name
             }
             response = generate_donor_statement(blood_donate.donor.donor_id,COLLECTED_DONATION_TEMPLATE,payload)
-            if response != 'error':
-                time.sleep(3)
-                doc_path = generate_doc_path(response['document']['id'], response['document']['meta'],
-                                             'donor-statements')
+            if response['status'] == 'success':
 
                 donor_notification = d_models.Notifications(donor=blood_donate.donor,
                                                             sender=request.user,
                                                             title="Blood Donation",
                                                             message="Thank you for donating your blood",
-                                                            attachment=doc_path,
+                                                            attachment=response['doc_path'],
                                                             created_date=timezone.datetime.now())
                 donor_notification.save()
             messages.success(request, "New donation record saved to database")
@@ -266,18 +279,17 @@ def generate_donation_report(request):
 
         "donors": donation_array
     }
-    report_data = generate_my_report('donation', DONATION_TEMPLATE, payload)
+    report_data = generate_donations_report('donation', DONATION_TEMPLATE, payload)
     #
     if report_data != 'error':
         generated_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        time.sleep(3)
-        doc_path = generate_doc_path(report_data['document']['id'], report_data['document']['meta'], 'donation-reports')
+        #doc_path = generate_doc_path(report_data['document']['id'], report_data['document']['meta'], 'donation-reports')
 
         # save the new report to the database
-        new_report = DonationReport(the_volunteer.volunteer_id, report_data['document']['id'],
+        new_report = DonationReport(the_volunteer.volunteer_id, report_data['id'],
                                     the_volunteer.blood_drive.drive_id,
-                                    report_data['document']['checksum'], doc_path, generated_date)
+                                    "Donation_report", report_data['doc_path'], generated_date)
         new_report.save()
         messages.success(request, "Donation report generated successfully and saved to files")
         return HttpResponseRedirect('/volunteer/donation-reports')
@@ -316,18 +328,15 @@ def generate_donor_report(request):
 
         "donors": donors_array
     }
-    report_data = generate_my_report('donor', DONOR_TEMPLATE, payload)
+    report_data = generate_donors_report('donor', DONOR_TEMPLATE, payload)
     #
-    if report_data != 'error':
+    if report_data['status'] == 'success':
         generated_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        time.sleep(3)
-        doc_path = generate_doc_path(report_data['document']['id'], report_data['document']['meta'], 'donor-reports')
-
         # save the new report to the database
-        new_report = DonorReport(the_volunteer.volunteer_id, report_data['document']['id'],
+        new_report = DonorReport(the_volunteer.volunteer_id, report_data['id'],
                                  the_volunteer.blood_drive.drive_id,
-                                 report_data['document']['checksum'], doc_path, generated_date)
+                                 "Donor-report", report_data['doc_path'], generated_date)
         new_report.save()
         messages.success(request, "Donor report generated successfully and saved to files")
         return HttpResponseRedirect('/volunteer/donor-reports')
@@ -466,15 +475,21 @@ def generate_station_report(request):
         return HttpResponseRedirect('/volunteer/volunteer-dashboard')
 
 
-def download_report(request, pk):
-    report_url = get_document_url(pk)
+def download_donor_report(request, pk):
+    #report_url = get_document_url(pk)
+    report = DonorReport.objects.get(report_id=pk)
 
-    if report_url != 'error':
-        return HttpResponseRedirect(report_url)
-    else:
-        messages.error(request, "Error in downloading report")
-        return HttpResponseRedirect('/volunteer/volunteer-dashboard')
+    return HttpResponseRedirect(report.file.url)
+def download_donation_report(request, pk):
+    #report_url = get_document_url(pk)
+    report = DonationReport.objects.get(report_id=pk)
 
+    return HttpResponseRedirect(report.file.url)
+def download_exam_report(request, pk):
+    #report_url = get_document_url(pk)
+    report = PreExamsReport.objects.get(report_id=pk)
+
+    return HttpResponseRedirect(report.file.url)
 
 class UploadReportView(TemplateView):
     template_name = 'volunteer/upload_reports.html'

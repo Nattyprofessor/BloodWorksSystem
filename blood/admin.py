@@ -84,7 +84,7 @@ class BloodDrivesAdmin(admin.ModelAdmin):
         if not change:
             x_id = generate_drive_id(obj.location_code.code, obj.county)
             obj.drive_id = x_id
-            obj.save(update_fields=['drive_id'])
+            obj.save()
             print('done')
 
 

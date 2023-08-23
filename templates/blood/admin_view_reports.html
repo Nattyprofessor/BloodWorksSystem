@@ -40,7 +40,7 @@
                 <td>{{t.station_id}}</td>
                 <td>{{t.title}}</td>
                 <td>{{t.created_at}}</td>
-                <td><a href="{% static t.file %}" target="_blank">Download</a></td>
+                <td><a href="{% url 'download-donor-report' t.report_id  %}">Download</a></td>
 
 
             </tr>
@@ -73,7 +73,7 @@
                 <td>{{t.station_id}}</td>
                 <td>{{t.title}}</td>
                 <td>{{t.created_at}}</td>
-                <td><a href="{% static t.file %}" target="_blank">Download</a></td>
+                <td><a href="{% url 'download-donation-report' t.report_id  %}">Download</a></td>
 
             </tr>
             {% endfor %}

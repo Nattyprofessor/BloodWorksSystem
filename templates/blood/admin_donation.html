@@ -38,15 +38,13 @@
                 <td> {{t.donor}}</td>
                 <td> {{t.disease}}</td>
                 <td> {{t.age}}</td>
-                <td>{{t.bloodgroup}}</td>
+                <td>{{t.blood_group}}</td>
                 <td>{{t.unit}}</td>
-                <td>{{t.date}}</td>
+                <td>{{t.created_date}}</td>
                 <td>{{t.status}}</td>
                 {% if t.status == 'Pending' %}
-                <td class="text-right">
-                    <button class="btn btn-primary badge-pill" style="width: 100px;"><a  style="text-decoration: none;color: white;" href="{% url 'approve-donation' t.id  %}">APPROVE</a> </button>
-                    <button class="btn btn-danger badge-pill" style="width: 80px;"><a  style="text-decoration: none;color: white;" href="{% url 'reject-donation' t.id  %}">REJECT</a> </button>
-                </td>
+                <td class="text-right"></td>
+
                 {% elif  t.status == 'Approved' %}
                 <td><span class="label warning">{{t.unit}} Unit Added To Stock</span></td>
 

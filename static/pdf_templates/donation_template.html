@@ -1,0 +1,99 @@
+<!--
+  Invoice template.
+  Styled using Tailwind CSS.
+  Head to the CSS tab to learn more.
+-->
+<head>
+<style>
+    // Imports Tailwind CSS for the basis and utility classes.
+// To learn more: https://tailwindcss.com
+@import url("https://pdfmonkey-resources.s3.eu-west-3.amazonaws.com/css/tailwind-light.min.css");
+
+.table {
+  td, th {
+    border: 1px solid white;
+    padding: .25rem 1rem;
+  }
+}
+
+.numeric-tabular {
+  // Sets the numbers width so that they stay aligned vertically.
+  font-variant-numeric: tabular-nums;
+}
+
+</style>
+</head>
+<body>
+<div class="flex flex-row items-center justify-between mb-8">
+  <div>
+    <img
+      src="https://raw.githubusercontent.com/Nattyprofessor/BloodWorksSystem/6a2cd3b47de82ee4d30a8f6bb75dc9e7e8271eb5/static/image/logo.png"
+      height="160"
+      width="145">
+          <h1 class="font-bold mb-2 text-4xl">Blood Works</h1>
+  </div>
+
+  <div class="w-3/5">
+    <h1 class="font-bold mb-2 text-4xl">Donation Report</h1>
+    <dl class="flex flex-wrap justify-between px-4">
+      <dt class="pr-2 w-5/12">Document Number: </dt>
+      <dd class="w-7/12">{{document_number}}</dd>
+
+      <dt class="pr-2 w-5/12">Created Date: </dt>
+      <dd class="w-7/12">{{document_date}}</dd>
+    </dl>
+  </div>
+</div>
+
+<div class=" items-center flex justify-between mb-8">
+  <dl class="border-2 border-blue-600 flex flex-wrap justify-between px-4 py-2 w-2/3">
+
+    <dt class="w-3/12">Volunteer Id: </dt>
+    <dd class="w-9/12">{{volunteer_id}}</dd>
+
+    <dt class="w-3/12">Station</dt>
+    <dd class="w-9/12">{{station_name}}</dd>
+    <dt class="w-3/12">Station</dt>
+    <dd class="w-9/12">{{station_id}}</dd>
+  </dl>
+</div>
+
+<table class="border-collapse mb-8 numeric-tabular table table-auto w-full">
+  <thead>
+    <tr class="bg-blue-600 text-white">
+      <th class="font-normal text-left">Donor ID</th>
+      <th class="font-normal text-left">Name</th>
+      <th class="font-normal text-right">Unit(s) 1 unit is 473ml</th>
+      <th class="font-normal text-right">Blood Group</th>
+      <th class="font-normal text-right">Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for lineItem in donors %}
+      <tr class="">
+        <td class="text-left">{{lineItem.donor_id}}</td>
+        <td class="text-left">{{lineItem.donor_name}}</td>
+        <td class="text-right">{{lineItem.units}}</td>
+        <td class="text-right">{{lineItem.blood_group}}</td>
+        <td class="text-right">{{lineItem.donation_type}}</td>
+      </tr>
+    {% endfor %}
+    <!-- Adding empty row to always have a minimum of 12 donor rows -->
+
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+
+  </tbody>
+</table>
+
+
+
+<hr>
+
+<p class="mt-4 text-center"><small>Blood Works Org</small></p>
+</body>

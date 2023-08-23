@@ -106,7 +106,7 @@ class LocationCodes(models.Model):
 
 # This model contains all blood drives in all counties in the country
 class BloodDrives(models.Model):
-    drive_id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=20)
+    drive_id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=60)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=40)
     county = models.CharField(max_length=15, choices=counties)

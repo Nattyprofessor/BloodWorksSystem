@@ -14,7 +14,7 @@
         <div class="card col px-3 py-3 my-2 mx-2">
             <h5 class="card-title">{{ report.title }}</h5>
             <p>Created at: {{ report.created_at }}</p>
-            <a href="{% url 'download-report' report.report_id  %}">Download</a>
+            <a href="{% url 'download-donation-report' report.report_id  %}">Download</a>
         </div>
     {% endfor %}
         </div>

@@ -66,9 +66,6 @@ def donor_dashboard_view(request):
     id_url = 'none'
     id_url = get_document_url(donor, donor.donor_card_code)
 
-    if datetime.now().hour == current_time + 1:
-        print('Generate new url')
-        id_url = get_document_url(donor, donor.donor_card_code)
     # returns the most recent donation done by the user
     recent_date = find_most_recent_datetime(donation_history)
     print("The recent date is: ", recent_date)
